@@ -6,6 +6,9 @@ deep learning methods like [maDLC](https://github.com/DeepLabCut/DeepLabCut) or
 [idtracker.ai](https://idtrackerai.readthedocs.io/en/latest/#) to fix
 instances where there are swapped points. 
 
+This package also has an implementation of a convolutional autoencoder. It helps reduce the dimensions of images 
+similar to non-linear PCA and retains most of its information.
+
 AutoPoseMapper does not replace maDLC or SLEAP. It has helper functions to use 
 with those packages.
 
@@ -22,13 +25,8 @@ Mapper](https://github.com/bermanlabemory/motionmapperpy) to create behavioral s
 navigate to unzipped folder containing setup.py.
 4. Run   
 <code>
-pip install numpy scikit-image hdf5storage scipy 
-pip install scikit-learn pandas matplotlib   
-pip install moviepy opencv-python easydict tables  
-pip install tensorflow-gpu==2.4.0  
-pip install pyyaml tqdm  
-pip install jupyter  
-pip install jupyterlab  
+pip install numpy scikit-image hdf5storage scipy scikit-learn pandas matplotlib moviepy opencv-python easydict tables 
+pip install tensorflow-gpu==2.4.0 pyyaml tqdm jupyter jupyterlab  
 python setup.py install
 </code>  
 
