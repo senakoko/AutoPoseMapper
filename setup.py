@@ -23,7 +23,7 @@ if __name__ == "__main__":
         description="Filter pose-estimation from Markerless Deep Learning Trackers",
         long_description=long_description,
         long_description_content_type="text/markdown",
-        # url="https://github.com/senaagezo/autoposemapper.git",
+        url="https://github.com/senakoko/AutoPoseMapper.git",
         install_requires=[
             "numpy==1.21.6",
             "scikit-image==0.19.2",
