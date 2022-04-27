@@ -1,0 +1,2 @@
+from autoposemapper.autoencoder.models.stacked_autoencoder import StackedAE
+from autoposemapper.autoencoder.models.variational_autoencoder import VariationalAE
