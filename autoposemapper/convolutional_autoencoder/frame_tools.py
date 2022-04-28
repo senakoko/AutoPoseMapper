@@ -10,7 +10,8 @@ class FrameTools:
         self.project_path = project_path
 
     def extract_frames_conv(self, video_type='.mp4', destination_path=None, opencv=True,
-                            numframes2pick=200, userfeedback=False, algo='uniform', name_prefix='extracted'):
+                            numframes2pick=200, userfeedback=False, algo='uniform', name_prefix='extracted',
+                            all_videos_or_subset='all', subset_num=10):
 
         video_path = Path(self.project_path) / 'conv_autoencoder_data'
         video_files = sorted(glob.glob(f'{str(video_path)}/**/*{video_type}', recursive=True))
@@ -18,14 +19,19 @@ class FrameTools:
         if destination_path is None:
             destination_path = video_path
 
-        idx = np.random.permutation(len(video_files))
-        idx_slice = idx[:30]
+        if all_videos_or_subset == 'subset':
+            idx = np.random.permutation(len(video_files))
+            idx_slice = idx[:subset_num]
 
-        videos = []
-        for i in idx_slice:
-            videos.append(video_files[i])
+            videos = []
+            for i in idx_slice:
+                videos.append(video_files[i])
+        else:
+            videos = video_files
 
-        for video in videos:
+        for num, video in enumerate(videos):
+            print(f"Extracted {num}/{len(videos)}")
+            print("Extracting ", Path(video).name)
             extract_frames(video, output_path=destination_path, numframes2pick=numframes2pick, opencv=opencv,
                            userfeedback=userfeedback, algo=algo, name_prefix=name_prefix)
 
@@ -51,12 +57,12 @@ class FrameTools:
 
         for fr in train_frames:
             file = frame_files[fr]
-            destination_file = train_destination_path / Path(file).name
+            destination_file = train_destination_path / f'{Path(file).parts[-2]}_{Path(file).name}'
             if not destination_file.exists():
                 shutil.copy(file, destination_file)
 
         for fr in test_frames:
             file = frame_files[fr]
-            destination_file = test_destination_path / Path(file).name
+            destination_file = test_destination_path / f'{Path(file).parts[-2]}_{Path(file).name}'
             if not destination_file.exists():
                 shutil.copy(file, destination_file)
