@@ -26,7 +26,8 @@ navigate to unzipped folder containing setup.py.
 4. Run   
 <code>
 pip install -r requirements.txt  
-</code>  
+</code>   
+
 5. Install tensorflow gpu if you have the hardware  
 <code>
 pip install tensorflow-gpu==2.4.0
