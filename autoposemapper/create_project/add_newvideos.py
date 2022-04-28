@@ -35,7 +35,8 @@ def add_new_videos(project_path, path2video, video_type='.mp4',
             print("Attempting to create a symbolic link of the video ...")
             for src, dst in zip(videos, destinations):
                 if dst.exists():
-                    raise FileExistsError("Video {} exists already!".format(dst))
+                    print("Video {} exists already!".format(dst))
+                    continue
                 try:
                     src = str(src)
                     dst = str(dst)
@@ -72,7 +73,8 @@ def add_new_videos(project_path, path2video, video_type='.mp4',
                 print("Attempting to create a symbolic link of the video ...")
                 for src, dst in zip(videos, destinations_cnn):
                     if dst.exists():
-                        raise FileExistsError("Video {} exists already!".format(dst))
+                        print("Video {} exists already!".format(dst))
+                        continue
                     try:
                         src = str(src)
                         dst = str(dst)
@@ -108,7 +110,8 @@ def add_new_videos(project_path, path2video, video_type='.mp4',
                 print("Attempting to create a symbolic link of the video ...")
                 for src, dst in zip(videos, destinations_cnn):
                     if dst.exists():
-                        raise FileExistsError("Video {} exists already!".format(dst))
+                        print("Video {} exists already!".format(dst))
+                        continue
                     try:
                         src = str(src)
                         dst = str(dst)
@@ -143,7 +146,8 @@ def add_new_videos(project_path, path2video, video_type='.mp4',
                 print("Attempting to create a symbolic link of the video ...")
                 for src, dst in zip(videos, destinations_cnn):
                     if dst.exists():
-                        raise FileExistsError("Video {} exists already!".format(dst))
+                        print("Video {} exists already!".format(dst))
+                        continue
                     try:
                         src = str(src)
                         dst = str(dst)
@@ -182,7 +186,8 @@ def add_new_videos(project_path, path2video, video_type='.mp4',
             print("Attempting to create a symbolic link of the video ...")
             for src, dst in zip(videos, destinations):
                 if dst.exists():
-                    raise FileExistsError("Video {} exists already!".format(dst))
+                    print("Video {} exists already!".format(dst))
+                    continue
                 try:
                     src = str(src)
                     dst = str(dst)
@@ -219,7 +224,8 @@ def add_new_videos(project_path, path2video, video_type='.mp4',
                 print("Attempting to create a symbolic link of the video ...")
                 for src, dst in zip(videos, destinations_cnn):
                     if dst.exists():
-                        raise FileExistsError("Video {} exists already!".format(dst))
+                        print("Video {} exists already!".format(dst))
+                        continue
                     try:
                         src = str(src)
                         dst = str(dst)
@@ -255,7 +261,8 @@ def add_new_videos(project_path, path2video, video_type='.mp4',
                 print("Attempting to create a symbolic link of the video ...")
                 for src, dst in zip(videos, destinations_cnn):
                     if dst.exists():
-                        raise FileExistsError("Video {} exists already!".format(dst))
+                        print("Video {} exists already!".format(dst))
+                        continue
                     try:
                         src = str(src)
                         dst = str(dst)
@@ -290,7 +297,8 @@ def add_new_videos(project_path, path2video, video_type='.mp4',
                 print("Attempting to create a symbolic link of the video ...")
                 for src, dst in zip(videos, destinations_cnn):
                     if dst.exists():
-                        raise FileExistsError("Video {} exists already!".format(dst))
+                        print("Video {} exists already!".format(dst))
+                        continue
                     try:
                         src = str(src)
                         dst = str(dst)
