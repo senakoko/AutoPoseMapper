@@ -25,10 +25,11 @@ Mapper](https://github.com/bermanlabemory/motionmapperpy) to create behavioral s
 navigate to unzipped folder containing setup.py.
 4. Run   
 <code>
-pip install numpy scikit-image hdf5storage scipy scikit-learn pandas matplotlib moviepy opencv-python easydict tables 
-pip install tensorflow-gpu==2.4.0 pyyaml tqdm jupyter jupyterlab   
-
-python setup.py install
+pip install -r requirements.txt  
+</code>  
+5. Install tensorflow gpu if you have the hardware  
+<code>
+pip install tensorflow-gpu==2.4.0
 </code>  
 
 ## Demo:

@@ -1,0 +1,17 @@
+numpy
+scikit-image
+hdf5storage
+scipy
+scikit-learn
+pandas
+matplotlib
+moviepy
+opencv-python
+easydict
+tables
+pyyaml
+tqdm
+jupyter
+jupyterlab
+umap-learn
+tensorflow
