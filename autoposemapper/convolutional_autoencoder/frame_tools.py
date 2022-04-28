@@ -30,6 +30,11 @@ class FrameTools:
             videos = video_files
 
         for num, video in enumerate(videos):
+            destination_folder = destination_path / Path(video).stem
+            destination_pictures = glob.glob(f"{destination_folder}/*.png")
+            if len(destination_pictures) >= numframes2pick:
+                print(f'Already extracted images from {Path(video).name}')
+                continue
             print(f"Extracted {num}/{len(videos)}")
             print("Extracting ", Path(video).name)
             extract_frames(video, output_path=destination_path, numframes2pick=numframes2pick, opencv=opencv,
