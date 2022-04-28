@@ -19,7 +19,7 @@ It also inherits the python version of the [Motion
 Mapper](https://github.com/bermanlabemory/motionmapperpy) to create behavioral spaces
 
 ## Installation:
-1. (OPTIONAL) Create a new conda environment <code>conda create -n apm python=3.7 -y </code>
+1. Create a new conda environment <code>conda create -n apm python=3.7 -y </code>
 2. Activate desired conda environment <code> conda activate apm </code>
 3. Download the repository and unzip contents. Open terminal and 
 navigate to unzipped folder containing setup.py.
