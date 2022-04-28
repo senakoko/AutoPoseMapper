@@ -35,7 +35,7 @@ pip install tensorflow-gpu==2.4.0
 
 ## Demo:
 Go to the Demo Folder. The Demos show how to use the autoposemapper. You can skip some of them but not
-the Demo_0.  
+the **Demo_0**.  
 
 Demo_0 - Create Project  
 Demo_0a - Add New Videos to Project  
