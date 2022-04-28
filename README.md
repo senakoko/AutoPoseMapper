@@ -22,7 +22,7 @@ Mapper](https://github.com/bermanlabemory/motionmapperpy) to create behavioral s
 1. Create a new conda environment <code>conda create -n apm python=3.7 -y </code>
 2. Activate desired conda environment <code> conda activate apm </code>
 3. Download the repository and unzip contents. Open terminal and 
-navigate to unzipped folder containing setup.py.
+navigate to unzipped folder containing requirements.txt.
 4. Run   
 <code>
 pip install -r requirements.txt  
@@ -36,6 +36,7 @@ pip install tensorflow-gpu==2.4.0
 ## Demo:
 Go to the Demo Folder. The Demos show how to use the autoposemapper. You can skip some of them but not
 the Demo_0.  
+
 Demo_0 - Create Project  
 Demo_0a - Add New Videos to Project  
 Demo_1a - Use SLEAP helper tools  
