@@ -35,7 +35,8 @@ class StackedCE(tf.keras.Model):
                  earlystop=10,
                  generator=True,
                  validation_split=0.2,
-                 verbose=1):
+                 verbose=1,
+                 color_channel_num=3):
         super(StackedCE, self).__init__()
         if checkpoint_path is None:
             print('Please provide a place to save checkpoints')
@@ -62,12 +63,13 @@ class StackedCE(tf.keras.Model):
         self.verbose = verbose
         self.coding_size = coding_size
         self.generator = generator
+        self.color_channel_num = color_channel_num
 
         self.model = self._model()
 
     def _model(self):
         """ Defines the model architecture for the network"""
-        if self.num_feat == 28:
+        if self.color_channel_num == 1:
             chan = 1  # color channel
             kstride = 3  # kernel stride for the deconv layer
         else:

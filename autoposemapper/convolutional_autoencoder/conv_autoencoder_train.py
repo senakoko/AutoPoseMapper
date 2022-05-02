@@ -15,8 +15,14 @@ class AutoTrain:
         self.project_path = project_path
 
     def auto_train_initial(self, num_feat=128, encoder_type='VAE', coding_size=8, epochs=5,
-                           batch_size=256, earlystop=10, verbose=1, gpu='0',
-                           scaling_factor=128. * 128.):
+                           batch_size=256, earlystop=10, verbose=1, gpu='0'):
+
+        num_feat_list = [2 ** i for i in range(3, 10)]
+        if num_feat not in num_feat_list:
+            print(f'the num_feat has to be one of this {num_feat_list}')
+            return
+
+        scaling_factor = float(num_feat) * float(num_feat)
 
         train_dir = Path(self.project_path) / 'conv_autoencoder_data' / 'train/'
         test_dir = Path(self.project_path) / 'conv_autoencoder_data' / 'test/'
@@ -70,8 +76,14 @@ class AutoTrain:
         return train_model, auto
 
     def auto_retrain(self, num_feat=128, encoder_type='VAE', coding_size=16, epochs=5,
-                     batch_size=256, earlystop=10, verbose=1, gpu='0',
-                     scaling_factor=128. * 128.):
+                     batch_size=256, earlystop=10, verbose=1, gpu='0'):
+
+        num_feat_list = [2 ** i for i in range(3, 10)]
+        if num_feat not in num_feat_list:
+            print(f'the num_feat has to be one of this {num_feat_list}')
+            return
+
+        scaling_factor = float(num_feat) * float(num_feat)
 
         train_dir = Path(self.project_path) / 'conv_autoencoder_data' / 'train/'
         test_dir = Path(self.project_path) / 'conv_autoencoder_data' / 'test/'
@@ -122,8 +134,14 @@ class AutoTrain:
         return train_model, auto
 
     def reduce_dimensions(self, num_feat=128, encoder_type='VAE', coding_size=8, epochs=5,
-                          batch_size=256, earlystop=10, verbose=1, gpu='0',
-                          scaling_factor=128. * 128., video_type='.mp4'):
+                          batch_size=256, earlystop=10, verbose=1, gpu='0', video_type='.mp4'):
+
+        num_feat_list = [2 ** i for i in range(3, 10)]
+        if num_feat not in num_feat_list:
+            print(f'the num_feat has to be one of this {num_feat_list}')
+            return
+
+        scaling_factor = float(num_feat) * float(num_feat)
 
         data_path = Path(self.project_path) / 'videos'
         data_files = sorted(glob.glob(f'{str(data_path)}/**/*{video_type}', recursive=True))
