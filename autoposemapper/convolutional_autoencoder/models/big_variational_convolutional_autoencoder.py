@@ -57,7 +57,7 @@ class BigVariationalCE(tf.keras.Model):
                  validation_split=0.2,
                  verbose=1,
                  color_channel_num=3):
-        super(VariationalCE, self).__init__()
+        super(BigVariationalCE, self).__init__()
         if checkpoint_path is None:
             print('Please provide a place to save checkpoints')
             return

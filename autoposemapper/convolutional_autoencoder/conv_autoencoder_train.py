@@ -40,7 +40,7 @@ class AutoTrain:
                                  epochs=epochs, batch_size=batch_size, coding_size=coding_size,
                                  checkpoint_path=checkpoint_path, training_num=f'conv_{encoder_type}_{coding_size}',
                                  earlystop=earlystop, scaling_factor=scaling_factor, verbose=verbose)
-            
+
         elif encoder_type == 'VAE' and num_feat >= 256:
             auto = BigVariationalCE(num_feat=num_feat, gpu=gpu,
                                     epochs=epochs, batch_size=batch_size, coding_size=coding_size,
