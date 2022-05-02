@@ -8,6 +8,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from autoposemapper.convolutional_autoencoder.models.stacked_convolutional_autoencoder import StackedCE
 from autoposemapper.convolutional_autoencoder.models.variational_convolutional_autoencoder import VariationalCE
+from autoposemapper.convolutional_autoencoder.models.big_variational_convolutional_autoencoder import BigVariationalCE
 
 
 class AutoTrain:
@@ -28,17 +29,23 @@ class AutoTrain:
         test_dir = Path(self.project_path) / 'conv_autoencoder_data' / 'test/'
 
         checkpoint_path = Path(self.project_path) / 'Training'
-        if encoder_type == 'SAE':
+        if encoder_type == 'SAE' and num_feat <= 128:
             auto = StackedCE(num_feat=num_feat, gpu=gpu,
                              epochs=epochs, batch_size=batch_size, coding_size=coding_size,
                              checkpoint_path=checkpoint_path, training_num=f'conv_{encoder_type}_{coding_size}',
                              earlystop=earlystop, verbose=verbose)
 
-        elif encoder_type == 'VAE':
+        elif encoder_type == 'VAE' and num_feat <= 128:
             auto = VariationalCE(num_feat=num_feat, gpu=gpu,
                                  epochs=epochs, batch_size=batch_size, coding_size=coding_size,
                                  checkpoint_path=checkpoint_path, training_num=f'conv_{encoder_type}_{coding_size}',
                                  earlystop=earlystop, scaling_factor=scaling_factor, verbose=verbose)
+            
+        elif encoder_type == 'VAE' and num_feat >= 256:
+            auto = BigVariationalCE(num_feat=num_feat, gpu=gpu,
+                                    epochs=epochs, batch_size=batch_size, coding_size=coding_size,
+                                    checkpoint_path=checkpoint_path, training_num=f'conv_{encoder_type}_{coding_size}',
+                                    earlystop=earlystop, scaling_factor=scaling_factor, verbose=verbose)
 
         train_datagen = ImageDataGenerator(rescale=1. / 255)
         test_datagen = ImageDataGenerator(rescale=1. / 255)
@@ -89,17 +96,23 @@ class AutoTrain:
         test_dir = Path(self.project_path) / 'conv_autoencoder_data' / 'test/'
 
         checkpoint_path = Path(self.project_path) / 'Training'
-        if encoder_type == 'SAE':
+        if encoder_type == 'SAE' and num_feat <= 128:
             auto = StackedCE(num_feat=num_feat, gpu=gpu,
                              epochs=epochs, batch_size=batch_size, coding_size=coding_size,
                              checkpoint_path=checkpoint_path, training_num=f'conv_{encoder_type}_{coding_size}',
                              earlystop=earlystop, verbose=verbose)
 
-        elif encoder_type == 'VAE':
+        elif encoder_type == 'VAE' and num_feat <= 128:
             auto = VariationalCE(num_feat=num_feat, gpu=gpu,
                                  epochs=epochs, batch_size=batch_size, coding_size=coding_size,
                                  checkpoint_path=checkpoint_path, training_num=f'conv_{encoder_type}_{coding_size}',
                                  earlystop=earlystop, scaling_factor=scaling_factor, verbose=verbose)
+
+        elif encoder_type == 'VAE' and num_feat >= 256:
+            auto = BigVariationalCE(num_feat=num_feat, gpu=gpu,
+                                    epochs=epochs, batch_size=batch_size, coding_size=coding_size,
+                                    checkpoint_path=checkpoint_path, training_num=f'conv_{encoder_type}_{coding_size}',
+                                    earlystop=earlystop, scaling_factor=scaling_factor, verbose=verbose)
 
         weights = sorted(glob.glob(f"{str(checkpoint_path.resolve())}/conv_weights/**/{encoder_type}*.ckpt.index",
                                    recursive=True))
@@ -155,17 +168,23 @@ class AutoTrain:
 
         checkpoint_path = Path(self.project_path) / 'Training'
 
-        if encoder_type == 'SAE':
+        if encoder_type == 'SAE' and num_feat <= 128:
             auto = StackedCE(num_feat=num_feat, gpu=gpu,
                              epochs=epochs, batch_size=batch_size, coding_size=coding_size,
                              checkpoint_path=checkpoint_path, training_num=f'conv_{encoder_type}_{coding_size}',
                              earlystop=earlystop, verbose=verbose)
 
-        elif encoder_type == 'VAE':
+        elif encoder_type == 'VAE' and num_feat <= 128:
             auto = VariationalCE(num_feat=num_feat, gpu=gpu,
                                  epochs=epochs, batch_size=batch_size, coding_size=coding_size,
                                  checkpoint_path=checkpoint_path, training_num=f'conv_{encoder_type}_{coding_size}',
                                  earlystop=earlystop, scaling_factor=scaling_factor, verbose=verbose)
+
+        elif encoder_type == 'VAE' and num_feat >= 256:
+            auto = BigVariationalCE(num_feat=num_feat, gpu=gpu,
+                                    epochs=epochs, batch_size=batch_size, coding_size=coding_size,
+                                    checkpoint_path=checkpoint_path, training_num=f'conv_{encoder_type}_{coding_size}',
+                                    earlystop=earlystop, scaling_factor=scaling_factor, verbose=verbose)
 
         weights = sorted(glob.glob(f"{str(checkpoint_path.resolve())}/conv_weights/**/{encoder_type}*.ckpt.index",
                                    recursive=True))
