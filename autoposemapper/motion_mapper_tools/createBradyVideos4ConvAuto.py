@@ -5,13 +5,14 @@ from moviepy.editor import *
 from pathlib import Path
 
 
-def make_brady_movie_parallel(reg, destination_path=None, groups=None, clips=None):
+def make_brady_movie_parallel(reg, destination_path=None, groups=None, clips=None, fps=50):
     """
     Create mosaic movies alias brady movies as a parallel stack.
     reg: region number from map
     destination_path: destination path to save videos
     groups: groups data from map
-    clips: the video clips
+    clips: the video clips.
+    fps:  frame per second of the recorded videos.
     """
 
     vid_dim = 6
@@ -28,12 +29,12 @@ def make_brady_movie_parallel(reg, destination_path=None, groups=None, clips=Non
     for sc in selected_clip:
         vid_end = sc[2] - sc[1]
         if vid_end >= vid_e:
-            vid_index, vid_start = sc[0], round((sc[1] / 30), 2)
-            vid_end = round((sc[1] + vid_e) / 30, 2)
+            vid_index, vid_start = sc[0], round((sc[1] / fps), 2)
+            vid_end = round((sc[1] + vid_e) / fps, 2)
             # print(f"{vid_index}-{vid_start}-{vid_end}")
             reg_vid = clips[vid_index - 1].subclip(vid_start, vid_end)
             # Generate a text clip  
-            txt_clip = TextClip(f"{vid_index}", fontsize=20, color='red',
+            txt_clip = TextClip(f"{vid_index}", fontsize=100, color='red',
                                 bg_color='White', stroke_width=1.5)
             txt_clip = txt_clip.set_pos(('right', 'top')).set_duration(reg_vid.duration)
             # Overlay the text clip on the video clip
@@ -59,16 +60,17 @@ def make_brady_movie_parallel(reg, destination_path=None, groups=None, clips=Non
             clip_vids.append(vids)
     clip_vids = clip_vids[:4]
     final_clip = clips_array(clip_vids)
-    final_clip.write_videofile(f"{destination_path}reg_{region_on_map}_vid.mp4")
+    final_clip.write_videofile(f"{destination_path}/reg_{region_on_map}_vid.mp4")
 
 
-def make_brady_movie_series(reg, destination_path=None, groups=None, clips=None):
+def make_brady_movie_series(reg, destination_path=None, groups=None, clips=None, fps=50):
     """
     Create mosaic movies alias brady movies as a series stack.
     reg: region number from map
     destination_path: destination path to save videos
     groups: groups data from map
     clips: the video clips
+    fps: frame per second of the recorded videos.
     """
 
     region_on_map = reg + 1
@@ -84,12 +86,12 @@ def make_brady_movie_series(reg, destination_path=None, groups=None, clips=None)
     for sc in selected_clip:
         vid_end = sc[2] - sc[1]
         if vid_end >= vid_e:
-            vid_index, vid_start = sc[0], round((sc[1] / 30), 2)
-            vid_end = round((sc[1] + vid_e) / 30, 2)
+            vid_index, vid_start = sc[0], round((sc[1] / fps), 2)
+            vid_end = round((sc[1] + vid_e) / fps, 2)
             # print(f"{vid_index}-{vid_start}-{vid_end}")
             reg_vid = clips[vid_index - 1].subclip(vid_start, vid_end)
             # Generate a text clip  
-            txt_clip = TextClip(f"{vid_index}", fontsize=20, color='red',
+            txt_clip = TextClip(f"{vid_index}", fontsize=100, color='red',
                                 bg_color='White', stroke_width=1.5)
             txt_clip = txt_clip.set_pos(('right', 'top')).set_duration(reg_vid.duration)
             # Overlay the text clip on the video clip
@@ -100,10 +102,11 @@ def make_brady_movie_series(reg, destination_path=None, groups=None, clips=None)
         else:
             continue
     final_clip = concatenate_videoclips(comp_clips)
-    final_clip.write_videofile(f"{destination_path}reg_{region_on_map}_vid.mp4")
+    final_clip.write_videofile(f"{destination_path}/reg_{region_on_map}_vid.mp4")
 
 
-def create_brady_videos(watershed_path, video_path, make_video_parallel_or_series='parallel'):
+def create_brady_videos(watershed_path, video_path, make_video_parallel_or_series='parallel',
+                        video_type='.mp4', fps=50):
     gp_data = str(Path(watershed_path).resolve())
     groups_data = hdf5storage.loadmat(gp_data)
     groups = abs(groups_data['groups'])
@@ -112,8 +115,8 @@ def create_brady_videos(watershed_path, video_path, make_video_parallel_or_serie
     vid_file_path = []
     for i in zValNames:
         file = i.item(0)
-        file = file[:file.find('_pca')] + '.mp4'
-        vid_files = f"{video_path}{file}"
+        file = file[:file.find('_pca')] + video_type
+        vid_files = glob.glob(f'{video_path}/**/{file}', recursive=True)[0]
         vid_file_path.append(vid_files)
 
     clips = [VideoFileClip(vid_name) for vid_name in vid_file_path]
@@ -135,7 +138,7 @@ def create_brady_videos(watershed_path, video_path, make_video_parallel_or_serie
 
     if make_video_parallel_or_series == 'parallel':
         for i in range(len(groups)):
-            make_brady_movie_parallel(i, destination_path=output_dir, groups=groups, clips=clips)
+            make_brady_movie_parallel(i, destination_path=output_dir, groups=groups, clips=clips, fps=fps)
     else:
         for i in range(len(groups)):
-            make_brady_movie_series(i, destination_path=output_dir, groups=groups, clips=clips)
+            make_brady_movie_series(i, destination_path=output_dir, groups=groups, clips=clips, fps=fps)
