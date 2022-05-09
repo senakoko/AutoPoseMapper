@@ -220,7 +220,7 @@ class AutoTrain:
                         encoded_features[counter] = frame_features[coding_to_pick].flatten()
                     counter += 1
                 encoded_features_df = pd.DataFrame(encoded_features)
-                with pd.HDFStore(f'{destination_path}{vid_name}.h5') as store:
+                with pd.HDFStore(f'{destination_path}/{vid_name}.h5') as store:
                     store.put('encoded_features', encoded_features_df)
 
                 del encoded_features, encoded_features_df
