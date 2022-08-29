@@ -9,6 +9,7 @@ import os
 import shutil
 from pathlib import Path
 import yaml
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def create_new_project(project,
@@ -53,6 +54,7 @@ def create_new_project(project,
     """
 
     from datetime import datetime as dt
+    parameters = set_run_parameter()
 
     months_3letter = {
         1: "Jan",
@@ -85,19 +87,33 @@ def create_new_project(project,
         print(f'Project {project_path} already exists')
         return
 
-    config_path = project_path / 'config_auto.yaml'
+    config_path = project_path / parameters.config_name
 
-    video_path = project_path / 'videos'
-    sleap_data = project_path / 'sleap_data'
-    dlc_data = project_path / 'dlc_data'
-    autoencoder_data = project_path / 'autoencoder_data'
-    id_tracker_data = project_path / 'id_tracker_data'
-    bash_files = project_path / 'bash_files'
-    conv_autoencoder_data = project_path / 'conv_autoencoder_data'
+    video_path = project_path / parameters.video_path_name
+    sleap_data = project_path / parameters.sleap_data_name
+    dlc_data = project_path / parameters.dlc_data_name
+    autoencoder_data = project_path / parameters.autoencoder_data_name
+    id_tracker_data = project_path / parameters.id_tracker_data_name
+    bash_files = project_path / parameters.bash_files_name
+    conv_autoencoder_data = project_path / parameters.conv_autoencoder_data_name
 
-    for p in [video_path, sleap_data, dlc_data, autoencoder_data, id_tracker_data, bash_files, conv_autoencoder_data]:
-        p.mkdir(parents=True, exist_ok=True)
-        print(f'Created {p}')
+    if sleap_or_dlc_or_conv == 'sleap':
+        for p in [video_path, sleap_data, autoencoder_data, bash_files]:
+            p.mkdir(parents=True, exist_ok=True)
+            print(f'Created {p}')
+    elif sleap_or_dlc_or_conv == 'dlc':
+        for p in [video_path, dlc_data, autoencoder_data, bash_files]:
+            p.mkdir(parents=True, exist_ok=True)
+            print(f'Created {p}')
+    elif sleap_or_dlc_or_conv == 'conv':
+        for p in [video_path, conv_autoencoder_data, autoencoder_data, bash_files]:
+            p.mkdir(parents=True, exist_ok=True)
+            print(f'Created {p}')
+    else:
+        for p in [video_path, sleap_data, dlc_data, autoencoder_data, id_tracker_data, bash_files,
+                  conv_autoencoder_data]:
+            p.mkdir(parents=True, exist_ok=True)
+            print(f'Created {p}')
 
     vids = []
     for i in videos:

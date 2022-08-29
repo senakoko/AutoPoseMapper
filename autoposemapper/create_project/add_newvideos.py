@@ -3,17 +3,28 @@ from pathlib import Path
 import os
 import shutil
 import yaml
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def add_new_videos(project_path, path2video, video_type='.mp4',
                    copy_videos=False, sleap_or_dlc_or_conv='sleap'):
+    """
+    Add new videos to the main project folder
+    :param project_path: (string) the path to the project folder
+    :param path2video: (string) the path to the video files
+    :param video_type: (string) the name extension for the video files
+    :param copy_videos: (bool) whether to copy the videos or not
+    :param sleap_or_dlc_or_conv: (string) Used sleap or dlc for tracking
+    :return:
+    """
+    parameters = set_run_parameter()
 
     project_path = Path(project_path)
-    config_path = project_path / 'config_auto.yaml'
-    video_path = project_path / 'videos'
-    sleap_data = project_path / 'sleap_data'
-    dlc_data = project_path / 'dlc_data'
-    conv_autoencoder_data = project_path / 'conv_autoencoder_data'
+    config_path = project_path / parameters.config_name
+    video_path = project_path / parameters.video_path_name
+    sleap_data = project_path / parameters.sleap_data_name
+    dlc_data = project_path / parameters.dlc_data_name
+    conv_autoencoder_data = project_path / parameters.conv_autoencoder_data_name
 
     if os.path.isdir(path2video):
         path2video = glob.glob(f"{path2video}/**/*{video_type}", recursive=True)
@@ -129,6 +140,7 @@ def add_new_videos(project_path, path2video, video_type='.mp4',
                             )
                             shutil.move(os.fspath(src), os.fspath(dst))
                             print("{} moved to {}".format(src, dst))
+
         elif sleap_or_dlc_or_conv == 'conv':
             destinations_cnn = [conv_autoencoder_data.joinpath(f"{vp.stem}/{vp.name}") for vp in videos]
             for folder in destinations_cnn:
@@ -280,6 +292,7 @@ def add_new_videos(project_path, path2video, video_type='.mp4',
                             )
                             shutil.move(os.fspath(src), os.fspath(dst))
                             print("{} moved to {}".format(src, dst))
+
         elif sleap_or_dlc_or_conv == 'conv':
             destinations_cnn = [conv_autoencoder_data.joinpath(f"{vp.stem}/{vp.name}") for vp in videos]
             for folder in destinations_cnn:
