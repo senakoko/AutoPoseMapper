@@ -25,7 +25,7 @@ if __name__ == "__main__":
         long_description_content_type="text/markdown",
         url="https://github.com/senakoko/AutoPoseMapper.git",
         install_requires=[
-            "numpy==1.21.6",
+            "numpy==1.22.0",
             "scikit-image==0.19.2",
             "hdf5storage==0.1.18",
             "scipy==1.7.3",
