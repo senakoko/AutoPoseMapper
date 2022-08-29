@@ -5,13 +5,18 @@ import os
 from pathlib import Path
 import h5py
 from autoposemapper.sleap_tools import utils
+from autoposemapper.setRunParameters import set_run_parameter
 
 warnings.filterwarnings('ignore')
 
 
 class SleapHelper:
-    def __init__(self, project_path):
+    def __init__(self, project_path, parameters=None):
         self.project_path = project_path
+        self.parameters = parameters
+
+        if self.parameters is None:
+            self.parameters = set_run_parameter()
 
     def track_videos_sleap(self, model_path, video_type='.mp4'):
         """
@@ -27,10 +32,10 @@ class SleapHelper:
         return:
         """
 
-        video_path = Path(self.project_path) / 'sleap_data'
+        video_path = Path(self.project_path) / self.parameters.sleap_data_name
         video_files = sorted(glob.glob(f'{str(video_path)}/**/*{video_type}', recursive=True))
 
-        bash_file = Path(self.project_path) / 'bash_files' / 'sleap_track_animal.sh'
+        bash_file = Path(self.project_path) / self.parameters.bash_files_name / self.parameters.sleap_track_animal_name
         bash_file = bash_file.resolve()
 
         with open(bash_file, 'w') as f:
@@ -63,10 +68,10 @@ class SleapHelper:
 
         """
 
-        predictions_path = Path(self.project_path) / 'sleap_data'
+        predictions_path = Path(self.project_path) / self.parameters.sleap_data_name
         predictions_files = sorted(glob.glob(f'{str(predictions_path)}/**/*predictions.slp', recursive=True))
 
-        bash_file = Path(self.project_path) / 'bash_files' / 'clean_tracked_animal.sh'
+        bash_file = Path(self.project_path) / self.parameters.bash_files_name / self.parameters.clean_track_animal_name
         bash_file = bash_file.resolve()
 
         with open(bash_file, 'w') as f:
@@ -102,10 +107,10 @@ class SleapHelper:
         return:
         """
 
-        predictions_path = Path(self.project_path) / 'sleap_data'
+        predictions_path = Path(self.project_path) / self.parameters.sleap_data_name
         predictions_files = sorted(glob.glob(f'{str(predictions_path)}/**/*predictions.cleaned.slp', recursive=True))
 
-        bash_file = Path(self.project_path) / 'bash_files' / 'convert_cleaned_slp.sh'
+        bash_file = Path(self.project_path) / self.parameters.bash_files_name / self.parameters.convert_cleaned_slp
         bash_file = bash_file.resolve()
 
         with open(bash_file, 'w') as f:
@@ -118,7 +123,7 @@ class SleapHelper:
             for file in predictions_files:
                 file = Path(file).resolve()
                 file_s = str(file)
-                eventual_name = f"{file_s[:file_s.find('.predictions.cleaned.slp')-4]}.h5"
+                eventual_name = f"{file_s[:file_s.find('.predictions.cleaned.slp') - 4]}.h5"
                 if os.path.exists(eventual_name):
                     continue
                 sleap_command = f"sleap-convert '{file_s}' -o '{eventual_name}' --format analysis "
@@ -132,7 +137,7 @@ class SleapHelper:
 
     def check_sleap_converted_h5(self):
 
-        h5_path = Path(self.project_path) / 'sleap_data'
+        h5_path = Path(self.project_path) / self.parameters.sleap_data_name
         h5_files = sorted(glob.glob(f'{str(h5_path)}/**/*.h5', recursive=True))
 
         for file in h5_files:
@@ -163,12 +168,13 @@ class SleapHelper:
         """
         convert Sleap's 'h5' to Pandas style/ DLC 'h5' format
         """
-        h5_path = Path(self.project_path) / 'sleap_data'
+        h5_path = Path(self.project_path) / self.parameters.sleap_data_name
         h5_files = sorted(glob.glob(f'{str(h5_path)}/**/*.h5', recursive=True))
 
-        destination_path = Path(self.project_path) / 'autoencoder_data'
+        destination_path = Path(self.project_path) / self.parameters.autoencoder_data_name
 
         sleap_files = []
+        # Check if the file has already been processed
         patterns = ['CNN']
         for file in h5_files:
             pattern_value = False

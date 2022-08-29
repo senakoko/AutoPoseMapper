@@ -24,6 +24,14 @@ def set_run_parameter(parameters=None):
 
     conv_autoencoder_data_name = 'conv_autoencoder_data'
 
+    # Parameters for SLEAP helper functions
+
+    sleap_track_animal_name = 'sleap_track_animal.sh'
+
+    clean_track_animal_name = 'clean_tracked_animal.sh'
+
+    convert_cleaned_slp = 'convert_cleaned_slp.sh'
+
     if 'config_name' not in parameters.keys():
         parameters.config_name = config_name
 
@@ -47,5 +55,14 @@ def set_run_parameter(parameters=None):
 
     if 'conv_autoencoder_data_name' not in parameters.keys():
         parameters.conv_autoencoder_data_name = conv_autoencoder_data_name
+
+    if 'sleap_track_animal_name' not in parameters.keys():
+        parameters.sleap_track_animal_name = sleap_track_animal_name
+
+    if 'clean_track_animal_name' not in parameters.keys():
+        parameters.clean_track_animal_name = clean_track_animal_name
+
+    if 'convert_cleaned_slp.sh' not in parameters.keys():
+        parameters.convert_cleaned_slp = convert_cleaned_slp
 
     return parameters

@@ -11,6 +11,7 @@ easydict
 tables
 pyyaml
 tqdm
+h5py
 jupyter
 jupyterlab
 umap-learn
