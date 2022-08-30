@@ -96,8 +96,7 @@ def make_tracked_movies(tracked_file, video_loc=None, skeleton_path=None,
 
         # h5 file part
         h5 = pd.read_hdf(tracked_file)
-        scorer = h5.columns.get_level_values('scorer').unique()
-        scorer = scorer.item()
+        scorer = h5.columns.get_level_values('scorer').unique().item()
         bodyparts = h5.columns.get_level_values('bodyparts').unique().to_list()
         individuals = h5.columns.get_level_values('individuals').unique().to_list()
 

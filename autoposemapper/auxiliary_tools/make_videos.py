@@ -2,11 +2,13 @@ from pathlib import Path
 import glob
 
 from autoposemapper.auxiliary_tools.makeTrackedVideos import make_tracked_movies, make_tracked_movies_idt
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 class MakeVideos:
-    def __init__(self, project_path):
+    def __init__(self, project_path, parameters=None):
         self.project_path = project_path
+        self.parameters = parameters
 
     def make_tracked_videos(self, video_loc=None, skeleton_path=None,
                             destination_path=None, subset=False,
@@ -14,7 +16,7 @@ class MakeVideos:
                             post_name='CNN_SAE', dot_size=4, tracker='_CSI',
                             no_tracker=False):
 
-        h5_path = Path(self.project_path) / 'autoencoder_data'
+        h5_path = Path(self.project_path) / self.parameters.autoencoder_data_name
         h5_files = sorted(glob.glob(f"{h5_path}/**/*{tracker}*.h5", recursive=True))
 
         for file in h5_files:
@@ -29,10 +31,10 @@ class MakeVideos:
                                   start_time=(1, 0), end_time=(10, 0),
                                   post_name='CNN_SAE', dot_size=4, tracker='CNN_SAE'):
 
-        h5_path = Path(self.project_path) / 'autoencoder_data'
+        h5_path = Path(self.project_path) / self.parameters.autoencoder_data_name
         h5_files = sorted(glob.glob(f"{h5_path}/**/*{tracker}*.h5", recursive=True))
 
-        idt_path = Path(self.project_path) / 'id_tracker_data'
+        idt_path = Path(self.project_path) / self.parameters.id_tracker_data_name
 
         for file in h5_files:
             make_tracked_movies_idt(file, video_loc=video_loc, skeleton_path=skeleton_path,
