@@ -11,6 +11,7 @@ import pandas as pd
 from autoposemapper.autoencoder.egocenter_h5 import egocenter_h5
 from autoposemapper.autoencoder.reorient_mat import reorient
 from autoposemapper.autoencoder.combineh5files import combine_h5_files
+from autoposemapper.setRunParameters import set_run_parameter
 
 import yaml
 from scipy.io import savemat, loadmat
@@ -19,22 +20,26 @@ warnings.filterwarnings('ignore')
 
 
 class AutoEncoderHelper:
-    def __init__(self, project_path):
+    def __init__(self, project_path, parameters=None):
         self.project_path = project_path
+        self.parameters = parameters
+
+        if self.parameters is None:
+            self.parameters = set_run_parameter()
 
     def egocenter_files(self, bind_center='midBody', b1='Nose',
                         b2='tailStart', drop_point=True, which_points=['tailEnd']):
 
-        h5_path = Path(self.project_path) / 'autoencoder_data'
+        h5_path = Path(self.project_path) / self.parameters.parameters.conv_autoencoder_data_name
         h5_files = sorted(glob.glob(f'{str(h5_path)}/*.h5'))
 
-        config_path = Path(self.project_path) / 'config_auto.yaml'
+        config_path = Path(self.project_path) / self.parameters.config_name
         config_path = str(config_path.resolve())
 
         for file in h5_files:
             file_p = Path(file).resolve()
             file_s = file_p.stem
-            sub_file_folder = file_p.parents[0] / f'{file_s[:file_s.find("_CNN")]}'
+            sub_file_folder = file_p.parents[0] / f'{file_s[:file_s.find(f"_{self.parameters.conv_tracker_name}")]}'
             if not sub_file_folder.exists():
                 sub_file_folder.mkdir()
             else:
@@ -43,8 +48,8 @@ class AutoEncoderHelper:
             shutil.move(str(file_p), str(destination_file))
 
             destination_file = str(destination_file)
-            animal_1 = destination_file[:destination_file.find('_CNN')]
-            file_name = f"{animal_1}_CNN_ego_animal_1_data.mat"
+            animal_1 = destination_file[:destination_file.find(f'_{self.parameters.conv_tracker_name}')]
+            file_name = f"{animal_1}_{self.parameters.conv_tracker_name}_ego_animal_1_data.mat"
             if not os.path.exists(file_name):
                 print(file)
 
@@ -65,10 +70,10 @@ class AutoEncoderHelper:
 
     def reorient_files(self, encoder_type='SAE'):
 
-        mat_path = Path(self.project_path) / 'autoencoder_data'
+        mat_path = Path(self.project_path) / self.parameters.autoencoder_data_name
         mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{encoder_type}_ego*.mat', recursive=True))
 
-        config_path = Path(self.project_path) / 'config_auto.yaml'
+        config_path = Path(self.project_path) / self.parameters.config_name
         config_path = str(config_path.resolve())
 
         with open(config_path, 'r') as fr:
@@ -88,27 +93,27 @@ class AutoEncoderHelper:
             if convert_auto:
                 auto_cnn_name = f"{a}_{encoder_type}_ego_animal_{b}_data.mat"
             else:
-                auto_cnn_name = f"{a}_CNN_ego_animal_{b}_data.mat"
+                auto_cnn_name = f"{a}_{self.parameters.conv_tracker_name}_ego_animal_{b}_data.mat"
 
-            ori_name = f"{a}_CNN_animal_{b}_data.mat"
+            ori_name = f"{a}_{self.parameters.conv_tracker_name}_animal_{b}_data.mat"
 
             if os.path.exists(ori_name) and os.path.exists(auto_cnn_name):
                 if convert_auto:
                     filename = f"{a}_{encoder_type}_animal_{b}_data.mat"
                 else:
-                    filename = f"{a}_CNN_r_animal_{b}_data.mat"
+                    filename = f"{a}_{self.parameters.conv_tracker_name}_r_animal_{b}_data.mat"
 
                 if not os.path.exists(filename):
                     print(filename)
                     oriented_predicted = reorient(ori_name, auto_cnn_name, bind_center_value, b1_value, b2_value)
-                    savemat(filename, {'animal_d': oriented_predicted})
+                    savemat(filename, {self.parameters.animal_key: oriented_predicted})
 
     def save_mat_to_h5(self, encoder_type='SAE'):
 
-        mat_path = Path(self.project_path) / 'autoencoder_data'
+        mat_path = Path(self.project_path) / self.parameters.autoencoder_data_name
         mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{encoder_type}_animal*.mat', recursive=True))
 
-        config_path = Path(self.project_path) / 'config_auto.yaml'
+        config_path = Path(self.project_path) / self.parameters.config_name
         config_path = str(config_path.resolve())
 
         with open(config_path, 'r') as fr:
@@ -123,7 +128,7 @@ class AutoEncoderHelper:
                 print(filename.name)
                 filename = str(filename.resolve())
                 mat_file = loadmat(file)
-                mat_data = mat_file['animal_d']
+                mat_data = mat_file[self.parameters.animal_key]
                 index = np.arange(len(mat_data))
 
                 if encoder_type == 'SAE':
@@ -136,11 +141,11 @@ class AutoEncoderHelper:
                 cols = pd.MultiIndex.from_product(iterables, names=['scorer', 'bodyparts', 'coords'])
 
                 output_df = pd.DataFrame(mat_data, index=index, columns=cols)
-                output_df.to_hdf(filename, 'animal_d')
+                output_df.to_hdf(filename, self.parameters.animal_key)
 
     def combine_animal_h5_files(self, encoder_type='SAE'):
 
-        h5_path = Path(self.project_path) / 'autoencoder_data'
+        h5_path = Path(self.project_path) / self.parameters.autoencoder_data_name
         h5_files = sorted(glob.glob(f'{str(h5_path)}/**/*{encoder_type}*animal*1*.h5'))
 
         for file in h5_files:

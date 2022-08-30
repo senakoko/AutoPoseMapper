@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.io import savemat
 from tqdm import tqdm
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def egocenter_h5(h5file, bind_center=None, b1=None, b2=None,
@@ -20,6 +21,7 @@ def egocenter_h5(h5file, bind_center=None, b1=None, b2=None,
     which_points: string - a list of points to drop
     return: ego-centered mat file data
     """
+    parameters = set_run_parameter()
     data = pd.read_hdf(h5file)
     data.interpolate(inplace=True)
     data.fillna(method='bfill', inplace=True)
@@ -93,8 +95,8 @@ def egocenter_h5(h5file, bind_center=None, b1=None, b2=None,
         h5rs_2D = ego_h5.reshape(ego_h5.shape[0], (ego_h5.shape[1] * ego_h5.shape[2]))
 
         a = h5file[:h5file.find(f'_{tracker}')]
-        savemat(f"{a}_{tracker}_animal_{v + 1}_data.mat", {'animal_d': vals})
-        savemat(f"{a}_{tracker}_ego_animal_{v + 1}_data.mat", {'animal_d': h5rs_2D})
+        savemat(f"{a}_{tracker}_animal_{v + 1}_data.mat", {parameters.animal_key: vals})
+        savemat(f"{a}_{tracker}_ego_animal_{v + 1}_data.mat", {parameters.animal_key: h5rs_2D})
 
     body_parts.remove(bind_center)
     bpts_val = {}

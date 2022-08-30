@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.io import loadmat
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def reorient(original_mat, predicted_mat, bind_center_value=None, b1_value=None, b2_value=None,
@@ -20,10 +21,11 @@ def reorient(original_mat, predicted_mat, bind_center_value=None, b1_value=None,
     -------
     predicted_2D: the reoriented data
     """
+    parameters = set_run_parameter()
     ori_d = loadmat(original_mat)
     predicted_data = loadmat(predicted_mat)
-    ori_vals = ori_d['animal_d']
-    predicted_vals = predicted_data['animal_d']
+    ori_vals = ori_d[parameters.animal_key]
+    predicted_vals = predicted_data[parameters.animal_key]
 
     # Transform to 3D
     ori_mat = ori_vals.reshape((ori_vals.shape[0], int(ori_vals.shape[1] / 2), 2))

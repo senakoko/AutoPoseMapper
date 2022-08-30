@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 import os
 import glob
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def combine_h5_files(file, destination_path=None, encoder_type='SAE'):
@@ -20,6 +21,7 @@ def combine_h5_files(file, destination_path=None, encoder_type='SAE'):
     """
     # read h5 file
     #     print(file, end='\n'*2)
+    parameters = set_run_parameter()
 
     # Destination filename
     destination_name = Path(file).stem
@@ -27,9 +29,9 @@ def combine_h5_files(file, destination_path=None, encoder_type='SAE'):
         destination_name = destination_name[:destination_name.find(f'_{encoder_type}_')]
     if destination_path is None:
         destination_path = file.rsplit('/', 1)[0]
-        destination_file = f"{destination_path}/{destination_name}_CNN_{encoder_type}.h5"
+        destination_file = f"{destination_path}/{destination_name}_{parameters.conv_tracker_name}_{encoder_type}.h5"
     else:
-        destination_file = f"{destination_path}{destination_name}_CNN_{encoder_type}.h5"
+        destination_file = f"{destination_path}{destination_name}_{parameters.conv_tracker_name}_{encoder_type}.h5"
 
     if os.path.exists(destination_file):
         return
@@ -76,4 +78,4 @@ def combine_h5_files(file, destination_path=None, encoder_type='SAE'):
     combine_data_df.where(combine_data_df > 0, inplace=True)
     combine_data_df.interpolate(inplace=True)
 
-    combine_data_df.to_hdf(destination_file, 'animal_d')
+    combine_data_df.to_hdf(destination_file, parameters.animal_key)

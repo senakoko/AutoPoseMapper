@@ -6,21 +6,26 @@ from tensorflow import keras as k
 import pandas as pd
 from autoposemapper.autoencoder.models.stacked_autoencoder import StackedAE
 from autoposemapper.autoencoder.models.variational_autoencoder import VariationalAE
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 class AutoTrain:
-    def __init__(self, project_path):
+    def __init__(self, project_path, parameters=None):
         self.project_path = project_path
+        self.parameters = parameters
+
+        if self.parameters is None:
+            self.parameters = set_run_parameter()
 
     def auto_train_initial(self, scorer_type='CNN', encoder_type='SAE', coding_size=16, epochs=5,
                            batch_size=256, earlystop=10, verbose=1, gpu='0',
                            scaling_factor=10):
 
-        mat_path = Path(self.project_path) / 'autoencoder_data'
+        mat_path = Path(self.project_path) / self.parameters.autoencoder_data_name
         mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{scorer_type}_ego*.mat', recursive=True))
 
         data = loadmat(mat_files[0])
-        data = data['animal_d']
+        data = data[self.parameters.animal_key]
 
         checkpoint_path = Path(self.project_path) / 'Training'
         if encoder_type == 'SAE':
@@ -39,7 +44,7 @@ class AutoTrain:
             mat_p = Path(mat_file).resolve()
             print(mat_p.stem)
             data = loadmat(mat_file)
-            data = data['animal_d']
+            data = data[self.parameters.animal_key]
             train_model = auto.train(data)
 
         training_model_path = (Path(self.project_path) / 'Training' / 'models' /
@@ -67,11 +72,11 @@ class AutoTrain:
                      batch_size=256, earlystop=10, verbose=1, gpu='0',
                      scaling_factor=10):
 
-        mat_path = Path(self.project_path) / 'autoencoder_data'
+        mat_path = Path(self.project_path) / self.parameters.autoencoder_data_name
         mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{scorer_type}_ego*.mat', recursive=True))
 
         data = loadmat(mat_files[0])
-        data = data['animal_d']
+        data = data[self.parameters.animal_key]
 
         checkpoint_path = Path(self.project_path) / 'Training'
 
@@ -98,7 +103,7 @@ class AutoTrain:
             mat_p = Path(mat_file).resolve()
             print(mat_p.stem)
             data = loadmat(mat_file)
-            data = data['animal_d']
+            data = data[self.parameters.animal_key]
             train_model = auto.train(data)
 
         training_model_path = (Path(self.project_path) / 'Training' / 'models' /
@@ -114,7 +119,7 @@ class AutoTrain:
 
     def predict_w_trained_network(self, scorer_type='CNN', encoder_type='SAE'):
 
-        mat_path = Path(self.project_path) / 'autoencoder_data'
+        mat_path = Path(self.project_path) / self.parameters.autoencoder_data_name
         mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{scorer_type}_ego*.mat', recursive=True))
 
         model_path = Path(self.project_path) / 'Training' / 'models'
@@ -132,12 +137,12 @@ class AutoTrain:
             if not os.path.exists(filename):
                 print(filename)
                 animal_d = loadmat(file)
-                animal_d = animal_d['animal_d']
+                animal_d = animal_d[self.parameters.animal_key]
                 predicted_d = auto.predict(animal_d)
                 # There might be NANs in the data, so you need to take care of them
                 predicted_d = pd.DataFrame(predicted_d)
                 predicted_d.interpolate(inplace=True)
                 predicted_d.fillna(method='bfill', inplace=True)
                 predicted_d = predicted_d.to_numpy()
-                savemat(filename, {'animal_d': predicted_d})
+                savemat(filename, {self.parameters.animal_key: predicted_d})
                 del animal_d, predicted_d

@@ -5,6 +5,7 @@ from pathlib import Path
 from scipy.io import loadmat
 import yaml
 import tensorflow as tf
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def model_loss_plots(train_model):
@@ -23,12 +24,13 @@ def model_accuracy_plots(train_model):
 
 def plot_trained_points(auto, project_path, scorer_type='CNN', frame_number=100):
 
-    skeleton_path = Path(project_path) / 'skeleton_ego.yaml'
-    mat_path = Path(project_path) / 'autoencoder_data'
+    parameters = set_run_parameter()
+    skeleton_path = Path(project_path) / parameters.skeleton_ego
+    mat_path = Path(project_path) / parameters.autoencoder_data_name
     mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{scorer_type}_ego*.mat', recursive=True))
 
     data = loadmat(mat_files[0])
-    data = data['animal_d']
+    data = data[parameters.animal_key]
 
     y_predicted = auto.model.predict(data)
 
@@ -60,10 +62,11 @@ def plot_image(images, connect):
 
 
 def generate_random_animal_w_vae(auto, project_path, posture_num=5, coding_size=16):
+    parameters = set_run_parameter()
     codings = tf.random.normal(shape=[posture_num, coding_size])
     images = auto.variational_decoder(codings).numpy()
 
-    skeleton_path = Path(project_path) / 'skeleton_ego.yaml'
+    skeleton_path = Path(project_path) / parameters.skeleton_ego
     with open(skeleton_path, 'r') as f:
         sk = yaml.load(f, Loader=yaml.FullLoader)
     conn = sk['Skeleton']

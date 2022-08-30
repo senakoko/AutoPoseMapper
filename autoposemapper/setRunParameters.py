@@ -12,7 +12,7 @@ def set_run_parameter(parameters=None):
 
     auto_tracker_name = 'SAE'
 
-    animal_key = 'vole_d'
+    animal_key = 'animal_d'
 
     # Names for the folders that created for the new project
     config_name = 'config_auto.yaml'
@@ -38,6 +38,10 @@ def set_run_parameter(parameters=None):
     clean_track_animal_name = 'clean_tracked_animal.sh'
 
     convert_cleaned_slp = 'convert_cleaned_slp.sh'
+
+    # Parameters for Skeletons
+
+    skeleton_ego = 'Skeletons/skeleton_ego.yaml'
 
     if 'conv_tracker_name' not in parameters.keys():
         parameters.conv_tracker_name = conv_tracker_name
@@ -80,5 +84,8 @@ def set_run_parameter(parameters=None):
 
     if 'convert_cleaned_slp.sh' not in parameters.keys():
         parameters.convert_cleaned_slp = convert_cleaned_slp
+
+    if 'skeleton_ego' not in parameters.keys():
+        parameters.skeleton_ego = skeleton_ego
 
     return parameters
