@@ -4,6 +4,7 @@ import re
 import os
 from pathlib import Path
 from tqdm import tqdm
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def cal_animal_area(h5=None, nsample=50, nframes=30, scorer=None):
@@ -84,6 +85,7 @@ def cal_bodypart_distances(file=None, destination_path=None, encoder_type='CSI')
     destination_path: the path to save tracked points.
     encoder_type: either SAE, VAE or CSI
     """
+    parameters = set_run_parameter()
     # Destination filename
     destination_name = Path(file).stem
     if re.search(f'_{encoder_type}_', destination_name):
@@ -154,7 +156,7 @@ def cal_bodypart_distances(file=None, destination_path=None, encoder_type='CSI')
     final_distances = final_distances.divide(np.sqrt(anim_area))  # Normalize  distance but the area of the voles
     print(f'{destination_name}_{name}:', int(np.sqrt(anim_area)))
 
-    final_distances.to_hdf(destination_file, 'animal_d')
+    final_distances.to_hdf(destination_file, parameters.animal_key)
 
 
 def cal_bodypart_distances_multi(file=None, destination_path=None, encoder_type='CSI'):
@@ -170,7 +172,7 @@ def cal_bodypart_distances_multi(file=None, destination_path=None, encoder_type=
     destination_path: the path to save tracked points.
     encoder_type: either SAE, VAE or CSI
     """
-
+    parameters = set_run_parameter()
     # Destination filename
     destination_name = Path(file).stem
     destination_name = destination_name[:destination_name.find(encoder_type)]
@@ -252,4 +254,4 @@ def cal_bodypart_distances_multi(file=None, destination_path=None, encoder_type=
 
         print(f'{destination_name}_{name}:', int(np.sqrt(anim_area)))
 
-        final_distances.to_hdf(destination_file, 'animal_d')
+        final_distances.to_hdf(destination_file, parameters.animal_key)

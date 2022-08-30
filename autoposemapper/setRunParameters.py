@@ -43,6 +43,14 @@ def set_run_parameter(parameters=None):
 
     skeleton_ego = 'Skeletons/skeleton_ego.yaml'
 
+    # Parameters for Brady Movie
+
+    brady_movie = 'Brady_Movie'
+
+    # Parameter for Projection
+
+    projection_name = 'Projections'
+
     if 'conv_tracker_name' not in parameters.keys():
         parameters.conv_tracker_name = conv_tracker_name
 
@@ -87,5 +95,11 @@ def set_run_parameter(parameters=None):
 
     if 'skeleton_ego' not in parameters.keys():
         parameters.skeleton_ego = skeleton_ego
+
+    if 'brady_movie' not in parameters.keys():
+        parameters.brady_movie = brady_movie
+
+    if 'projection_name' not in parameters.keys():
+        parameters.projection_name = projection_name
 
     return parameters

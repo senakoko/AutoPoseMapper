@@ -3,6 +3,7 @@ import hdf5storage
 import numpy as np
 from moviepy.editor import *
 from pathlib import Path
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def make_brady_movie_parallel(reg, destination_path=None, groups=None, clips=None, fps=50):
@@ -107,6 +108,7 @@ def make_brady_movie_series(reg, destination_path=None, groups=None, clips=None,
 
 def create_brady_videos(watershed_path, video_path, make_video_parallel_or_series='parallel',
                         video_type='.mp4', fps=50):
+    parameters = set_run_parameter()
     gp_data = str(Path(watershed_path).resolve())
     groups_data = hdf5storage.loadmat(gp_data)
     groups = abs(groups_data['groups'])
@@ -123,11 +125,11 @@ def create_brady_videos(watershed_path, video_path, make_video_parallel_or_serie
 
     output_dir = Path(watershed_path).parents[0]
     output_dir = output_dir.parents[0]
-    output_dir = output_dir / 'Brady_Movies1'
+    output_dir = output_dir / parameters.brady_movie
     if output_dir.exists():
         output_dirs = glob.glob(f'{str(output_dir.resolve())[:-1]}*')[-1]
         numb = int(Path(output_dirs).stem[-1])
-        output_dir = output_dir.parents[0] / f'Brady_Movies{numb + 1}'
+        output_dir = output_dir.parents[0] / f'{parameters.brady_movie}{numb + 1}'
         output_dir.mkdir(parents=True)
     else:
         output_dir.mkdir(parents=True)

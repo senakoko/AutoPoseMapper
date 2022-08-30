@@ -3,14 +3,16 @@ import pandas as pd
 import numpy as np
 from scipy.io import savemat, loadmat
 from pathlib import Path
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def extract_projections(encoded_path):
+    parameters = set_run_parameter()
 
     h5_path = Path(encoded_path)
     h5_files = sorted(glob.glob(f"{h5_path}/**/*.h5", recursive=True))
 
-    projection_path = Path(encoded_path).parents[0] / 'Projections'
+    projection_path = Path(encoded_path).parents[0] / parameters.projection_name
     if not projection_path.exists():
         projection_path.mkdir(parents=True)
 
@@ -27,8 +29,9 @@ def extract_projections(encoded_path):
 
 
 def check_extracted_projections(encoded_path):
+    parameters = set_run_parameter()
 
-    projection_path = Path(encoded_path).parents[0] / 'Projections'
+    projection_path = Path(encoded_path).parents[0] / parameters.projection_name
     projection_files = sorted(glob.glob(f"{projection_path}/*pcaModes.mat", recursive=True))
 
     data_count = []

@@ -9,9 +9,11 @@ from pathlib import Path
 import re
 import yaml
 import pandas as pd
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def create_brady_videos(project_path, watershed_path, autoencoder_data_path, video_path, encoder_type='SAE'):
+    parameters = set_run_parameter()
     gp_data = str(Path(watershed_path).resolve())
     groups_data = hdf5storage.loadmat(gp_data)
     groups = abs(groups_data['groups'])
@@ -69,11 +71,11 @@ def create_brady_videos(project_path, watershed_path, autoencoder_data_path, vid
 
     output_dir = Path(watershed_path).parents[0]
     output_dir = output_dir.parents[0]
-    output_dir = output_dir / 'Brady_Movies1'
+    output_dir = output_dir / parameters.brady_movie
     if output_dir.exists():
         output_dirs = glob.glob(f'{str(output_dir.resolve())[:-1]}*')[-1]
         numb = int(Path(output_dirs).stem[-1])
-        output_dir = output_dir.parents[0] / f'Brady_Movies{numb + 1}'
+        output_dir = output_dir.parents[0] / f'{parameters.brady_movie}{numb + 1}'
         output_dir.mkdir(parents=True)
     else:
         output_dir.mkdir(parents=True)
@@ -83,7 +85,7 @@ def create_brady_videos(project_path, watershed_path, autoencoder_data_path, vid
     groups = groups - 1  # adjust for matlab starting index = 1
 
     # Connections point on the rodent
-    skeleton_path = Path(project_path) / 'skeleton_ego.yaml'
+    skeleton_path = Path(project_path) / parameters.skeleton_ego
     with open(skeleton_path, 'r') as f:
         sk = yaml.load(f, Loader=yaml.FullLoader)
     connect = sk['Skeleton']
@@ -97,6 +99,7 @@ def create_brady_videos(project_path, watershed_path, autoencoder_data_path, vid
 
 
 def center_video(region, output_dir, groups, connections, h5s, vidnames, animal_fps=25, subs=4, num_pad=250):
+    parameters = set_run_parameter()
 
     output_name = output_dir + '/regions_' + '%.3i' % (region + 1) + '.mp4'
     if os.path.exists(output_name):
