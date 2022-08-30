@@ -3,17 +3,22 @@ import numpy as np
 from pathlib import Path
 from autoposemapper.convolutional_autoencoder.frame_extraction import extract_frames
 import shutil
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 class FrameTools:
-    def __init__(self, project_path):
+    def __init__(self, project_path, parameters=None):
         self.project_path = project_path
+        self.parameters = parameters
+
+        if self.parameters is None:
+            self.parameters = set_run_parameter()
 
     def extract_frames_conv(self, video_type='.mp4', destination_path=None, opencv=True,
                             numframes2pick=200, userfeedback=False, algo='uniform', name_prefix='extracted',
                             all_videos_or_subset='all', subset_num=10):
 
-        video_path = Path(self.project_path) / 'conv_autoencoder_data'
+        video_path = Path(self.project_path) / self.parameters.conv_autoencoder_data_name
         video_files = sorted(glob.glob(f'{str(video_path)}/**/*{video_type}', recursive=True))
 
         if destination_path is None:
@@ -42,7 +47,7 @@ class FrameTools:
 
     def create_train_test_datasets(self, train_fraction=0.8):
 
-        frame_path = Path(self.project_path) / 'conv_autoencoder_data'
+        frame_path = Path(self.project_path) / self.parameters.conv_autoencoder_data_name
         frame_files = sorted(glob.glob(f'{str(frame_path)}/**/*.png', recursive=True))
 
         frames2pick = np.arange(len(frame_files))
@@ -51,8 +56,8 @@ class FrameTools:
         train_frames = np.random.choice(frames2pick, train_size, replace=False)
         test_frames = list(set(frames2pick) - set(train_frames))
 
-        train_destination_path = Path(self.project_path) / 'conv_autoencoder_data' / 'train/animals/'
-        test_destination_path = Path(self.project_path) / 'conv_autoencoder_data' / 'test/animals/'
+        train_destination_path = Path(self.project_path) / self.parameters.conv_autoencoder_data_name / 'train/animals/'
+        test_destination_path = Path(self.project_path) / self.parameters.conv_autoencoder_data_name / 'test/animals/'
 
         if not train_destination_path.exists():
             train_destination_path.mkdir(parents=True)

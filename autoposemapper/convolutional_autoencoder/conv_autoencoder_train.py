@@ -9,11 +9,16 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from autoposemapper.convolutional_autoencoder.models.stacked_convolutional_autoencoder import StackedCE
 from autoposemapper.convolutional_autoencoder.models.variational_convolutional_autoencoder import VariationalCE
 from autoposemapper.convolutional_autoencoder.models.big_variational_convolutional_autoencoder import BigVariationalCE
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 class AutoTrain:
-    def __init__(self, project_path):
+    def __init__(self, project_path, parameters=None):
         self.project_path = project_path
+        self.parameters = parameters
+
+        if self.parameters is None:
+            self.parameters = set_run_parameter()
 
     def auto_train_initial(self, num_feat=128, encoder_type='VAE', coding_size=8, epochs=5,
                            batch_size=256, earlystop=10, verbose=1, gpu='0'):
@@ -25,8 +30,8 @@ class AutoTrain:
 
         scaling_factor = float(num_feat) * float(num_feat)
 
-        train_dir = Path(self.project_path) / 'conv_autoencoder_data' / 'train/'
-        test_dir = Path(self.project_path) / 'conv_autoencoder_data' / 'test/'
+        train_dir = Path(self.project_path) / self.parameters.conv_autoencoder_data_name / 'train/'
+        test_dir = Path(self.project_path) / self.parameters.conv_autoencoder_data_name / 'test/'
 
         checkpoint_path = Path(self.project_path) / 'Training'
         if encoder_type == 'SAE' and num_feat <= 128:
@@ -92,8 +97,8 @@ class AutoTrain:
 
         scaling_factor = float(num_feat) * float(num_feat)
 
-        train_dir = Path(self.project_path) / 'conv_autoencoder_data' / 'train/'
-        test_dir = Path(self.project_path) / 'conv_autoencoder_data' / 'test/'
+        train_dir = Path(self.project_path) / self.parameters.conv_autoencoder_data_name / 'train/'
+        test_dir = Path(self.project_path) / self.parameters.conv_autoencoder_data_name / 'test/'
 
         checkpoint_path = Path(self.project_path) / 'Training'
         if encoder_type == 'SAE' and num_feat <= 128:
@@ -156,7 +161,7 @@ class AutoTrain:
 
         scaling_factor = float(num_feat) * float(num_feat)
 
-        data_path = Path(self.project_path) / 'videos'
+        data_path = Path(self.project_path) / self.parameters.video_path_name
         data_files = sorted(glob.glob(f'{str(data_path)}/**/*{video_type}', recursive=True))
 
         destination_path = Path(self.project_path) / f'Encoded_Conv_{encoder_type}_{coding_size}' / 'Encoded'

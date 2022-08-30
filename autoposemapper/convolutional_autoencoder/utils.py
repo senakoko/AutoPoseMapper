@@ -6,6 +6,7 @@ import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
 import pandas as pd
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def model_loss_plots(train_model):
@@ -30,7 +31,8 @@ def plot_image(image):
 def show_reconstruction(auto, project_path, num_feat=128, batch_size=256,
                         posture_num=5):
 
-    test_dir = Path(project_path) / 'conv_autoencoder_data' / 'test/'
+    parameters = set_run_parameter()
+    test_dir = Path(project_path) / parameters.conv_autoencoder_data_name / 'test/'
     test_datagen = ImageDataGenerator(rescale=1. / 255)
 
     test_generator = test_datagen.flow_from_directory(test_dir,
