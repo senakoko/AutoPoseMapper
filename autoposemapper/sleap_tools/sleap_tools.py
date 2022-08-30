@@ -175,7 +175,7 @@ class SleapHelper:
 
         sleap_files = []
         # Check if the file has already been processed
-        patterns = ['CNN']
+        patterns = [self.parameters.conv_tracker_name]
         for file in h5_files:
             pattern_value = False
             for pattern in patterns:

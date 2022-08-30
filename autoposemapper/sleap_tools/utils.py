@@ -6,6 +6,7 @@ import h5py
 import os
 from tqdm import tqdm
 from pathlib import Path
+from autoposemapper.setRunParameters import set_run_parameter
 
 
 def convert_sh5_to_ph5(file, destination_path=None, scorer='SLEAP'):
@@ -19,15 +20,15 @@ def convert_sh5_to_ph5(file, destination_path=None, scorer='SLEAP'):
     scorer: name of the scorer: default to 'SLEAP'
 
     """
-
+    parameters = set_run_parameter()
     # Destination filename
     if destination_path is None:
         destination_name = Path(file).stem
         destination_path = str(Path(file).parents[0])
-        destination_file = f"{destination_path}/{destination_name}_CNN.h5"
+        destination_file = f"{destination_path}/{destination_name}_{parameters.conv_tracker_name}.h5"
     else:
         destination_name = Path(file).stem
-        destination_file = f"{destination_path}/{destination_name}_CNN.h5"
+        destination_file = f"{destination_path}/{destination_name}_{parameters.conv_tracker_name}.h5"
 
     if os.path.exists(destination_file):
         return
@@ -56,7 +57,7 @@ def convert_sh5_to_ph5(file, destination_path=None, scorer='SLEAP'):
     print(destination_file)
 
     data_df = pd.DataFrame(cnn_data, columns=col)
-    data_df.to_hdf(destination_file, 'vole_d')
+    data_df.to_hdf(destination_file, parameters.animal_key)
 
 
 def check_pandas_h5(file_path):

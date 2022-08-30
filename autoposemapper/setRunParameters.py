@@ -7,6 +7,13 @@ def set_run_parameter(parameters=None):
     else:
         parameters = eDict()
 
+    # Names for the processed files
+    conv_tracker_name = 'CNN'
+
+    auto_tracker_name = 'SAE'
+
+    animal_key = 'vole_d'
+
     # Names for the folders that created for the new project
     config_name = 'config_auto.yaml'
 
@@ -31,6 +38,15 @@ def set_run_parameter(parameters=None):
     clean_track_animal_name = 'clean_tracked_animal.sh'
 
     convert_cleaned_slp = 'convert_cleaned_slp.sh'
+
+    if 'conv_tracker_name' not in parameters.keys():
+        parameters.conv_tracker_name = conv_tracker_name
+
+    if 'auto_tracker_name' not in parameters.keys():
+        parameters.auto_tracker_name = auto_tracker_name
+
+    if 'animal_key' not in parameters.keys():
+        parameters.animal_key = animal_key
 
     if 'config_name' not in parameters.keys():
         parameters.config_name = config_name
