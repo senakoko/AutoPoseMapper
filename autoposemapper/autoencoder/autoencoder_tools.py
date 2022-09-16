@@ -30,7 +30,7 @@ class AutoEncoderHelper:
     def egocenter_files(self, bind_center='midBody', b1='Nose',
                         b2='tailStart', drop_point=True, which_points=['tailEnd']):
 
-        h5_path = Path(self.project_path) / self.parameters.parameters.conv_autoencoder_data_name
+        h5_path = Path(self.project_path) / self.parameters.autoencoder_data_name
         h5_files = sorted(glob.glob(f'{str(h5_path)}/*.h5'))
 
         config_path = Path(self.project_path) / self.parameters.config_name

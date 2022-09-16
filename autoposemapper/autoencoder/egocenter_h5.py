@@ -59,8 +59,9 @@ def egocenter_h5(h5file, bind_center=None, b1=None, b2=None,
     for v, individual in enumerate(individuals):
 
         individual_data = data[scorer][individual]
-        for points in which_points:
-            individual_data = individual_data.drop(points, axis=1)
+        if drop_point:
+            for points in which_points:
+                individual_data = individual_data.drop(points, axis=1)
 
         # Removing the tail points from the dataset
         vals = individual_data.values
