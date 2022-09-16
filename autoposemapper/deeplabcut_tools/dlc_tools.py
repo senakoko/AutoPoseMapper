@@ -4,6 +4,7 @@ import warnings
 import glob
 from pathlib import Path
 from autoposemapper.setRunParameters import set_run_parameter
+import pandas as pd
 
 
 warnings.filterwarnings('ignore')
@@ -44,7 +45,7 @@ class DlcHelper:
             file_s = Path(file).stem
             file_s = file_s[:file_s.find('DLC')]
             destination_file = f'{destination_path}/{file_s}_{self.parameters.conv_tracker_name}.h5'
-            shutil.copy(file, destination_file)
+            self.process_DLC_file(file, destination_file)
 
     def copy_labeled_DLC_h5(self, labeled_data_path=None):
         """
@@ -76,3 +77,26 @@ class DlcHelper:
                 os.makedirs(sub_folder_path, exist_ok=True)
             destination_file = f'{sub_folder_path}/{file_s}_{self.parameters.conv_tracker_name}.h5'
             shutil.copy(file, destination_file)
+
+    def process_DLC_file(self, file, destination_file):
+        data = pd.read_hdf(file)
+        scorer = data.columns.get_level_values('scorer').unique().item()
+        individuals = data.columns.get_level_values('individuals').unique().to_list()
+        body_parts = data.columns.get_level_values('bodyparts').unique().to_list()
+        coordinates = data.columns.get_level_values('coords').unique().to_list()
+
+        if 'likelihood' in coordinates:
+            data_df = pd.DataFrame()
+            for v, individual in enumerate(individuals):
+                individual_data = data[scorer][individual]
+                individual_data_new = individual_data.swaplevel(axis=1).drop('likelihood', axis=1, level=0).swaplevel(
+                    axis=1)
+                data_df = pd.concat([data_df, individual_data_new], axis=1)
+
+            col = pd.MultiIndex.from_product([[scorer], individuals, body_parts, ['x', 'y']],
+                                             names=['scorer', 'individuals', 'bodyparts', 'coords']
+                                             )
+            new_data = pd.DataFrame(data=data_df.values, index=data.index, columns=col)
+            new_data.to_hdf(destination_file, self.parameters.animal_key)
+        else:
+            data.to_hdf(destination_file, self.parameters.animal_key)
