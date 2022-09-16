@@ -30,6 +30,8 @@ class AutoTrain:
         data = loadmat(mat_files[0])
         data = data[self.parameters.animal_key]
 
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
+
         checkpoint_path = Path(self.project_path) / 'Training'
         if encoder_type == 'SAE':
             auto = StackedAE(num_feat=data.shape[1], gpu=gpu,
@@ -43,12 +45,20 @@ class AutoTrain:
                                  checkpoint_path=checkpoint_path, training_num=f'{encoder_type}_{coding_size}',
                                  earlystop=earlystop, scaling_factor=scaling_factor, verbose=verbose)
 
-        for mat_file in mat_files:
-            mat_p = Path(mat_file).resolve()
-            print(mat_p.stem)
-            data = loadmat(mat_file)
-            data = data[self.parameters.animal_key]
-            train_model = auto.train(data)
+        if use_labeled_data:
+            data_df = pd.DataFrame()
+            for mat_file in mat_files:
+                data = loadmat(mat_file)
+                data = pd.DataFrame(data['animal_d'])
+                data_df = pd.concat([data_df, data], axis=0, ignore_index=True)
+            train_model = auto.train(data_df.values)
+        else:
+            for mat_file in mat_files:
+                mat_p = Path(mat_file).resolve()
+                print(mat_p.stem)
+                data = loadmat(mat_file)
+                data = data[self.parameters.animal_key]
+                train_model = auto.train(data)
 
         training_model_path = (Path(self.project_path) / 'Training' / 'models' /
                                f'model_{encoder_type}_{coding_size}_0')
@@ -84,6 +94,8 @@ class AutoTrain:
         data = loadmat(mat_files[0])
         data = data[self.parameters.animal_key]
 
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
+
         checkpoint_path = Path(self.project_path) / 'Training'
 
         if encoder_type == 'SAE':
@@ -105,12 +117,20 @@ class AutoTrain:
         num = int(Path(weights).parts[-2].rsplit('_')[-1])
         auto.model.load_weights(weights)
 
-        for mat_file in mat_files:
-            mat_p = Path(mat_file).resolve()
-            print(mat_p.stem)
-            data = loadmat(mat_file)
-            data = data[self.parameters.animal_key]
-            train_model = auto.train(data)
+        if use_labeled_data:
+            data_df = pd.DataFrame()
+            for mat_file in mat_files:
+                data = loadmat(mat_file)
+                data = pd.DataFrame(data['animal_d'])
+                data_df = pd.concat([data_df, data], axis=0, ignore_index=True)
+            train_model = auto.train(data_df.values)
+        else:
+            for mat_file in mat_files:
+                mat_p = Path(mat_file).resolve()
+                print(mat_p.stem)
+                data = loadmat(mat_file)
+                data = data[self.parameters.animal_key]
+                train_model = auto.train(data)
 
         training_model_path = (Path(self.project_path) / 'Training' / 'models' /
                                f'model_{encoder_type}_{coding_size}_{num + 1}')

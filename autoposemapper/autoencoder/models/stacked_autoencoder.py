@@ -45,12 +45,14 @@ class StackedAE(tf.keras.Model):
             if not os.path.exists(self.checkpoint_dir):
                 os.makedirs(self.checkpoint_dir)
 
-        if isinstance(gpu, int):
-            os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu)
-            self.gpu = True
+        self.gpu = gpu
+        if self.gpu is None:
+            os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+            self.gpu = '0'
+        elif isinstance(self.gpu, int):
+            os.environ["CUDA_VISIBLE_DEVICES"] = str(self.gpu)
         else:
-            os.environ["CUDA_VISIBLE DEVICES"] = '0'
-            self.gpu = False
+            os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         self.trainX = trainX
         self.batch_size, self.epochs = batch_size, epochs

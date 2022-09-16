@@ -52,23 +52,23 @@ For Stacked Autoencoder Network:
 Check the performance of the network
 
 8. ```
-   autoencoder.utils.model_loss_plots(history)
+   AE_utils.model_loss_plots(history)
    ```
    
 9. ```
-   autoencoder.utils.model_accuracy_plots(history)
+   AE_utils.model_accuracy_plots(history)
    ```
    
 Create Skeleton of egocenter before running this code below
 
 10. ```
-    autoencoder.utils.plot_trained_points(network, project_path, frame_number=1500)
+    AE_utils.plot_trained_points(network, project_path, frame_number=1500)
     ```
     
 If you trained a Variational Autoencoder Network, VAE, you can use the code below
 
 11. ```
-    autoencoder.utils.generate_random_animal_w_vae(auto, project_path)
+    AE_utils.generate_random_animal_w_vae(auto, project_path)
     ```
     
 Re-train the network if needed
