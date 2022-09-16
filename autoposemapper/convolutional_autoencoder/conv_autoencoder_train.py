@@ -30,6 +30,8 @@ class AutoTrain:
 
         scaling_factor = float(num_feat) * float(num_feat)
 
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
+
         train_dir = Path(self.project_path) / self.parameters.conv_autoencoder_data_name / 'train/'
         test_dir = Path(self.project_path) / self.parameters.conv_autoencoder_data_name / 'test/'
 
