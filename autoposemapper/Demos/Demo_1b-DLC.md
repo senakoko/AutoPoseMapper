@@ -37,6 +37,6 @@ Copy DLC h5 files from the DLC folder to the Autoencoder Folder
 Copy labeled data used to train the DLC network if you have it - Skip this step if you don't
 You can use the labeled data to train the autoencoder network
 
-6. ```
+7. ```
    dlc.copy_labeled_DLC_h5('/path_to_the_DLC_data/labeled-data/')
    ```
