@@ -19,7 +19,7 @@ Make sure you have activated the conda environment that you created following th
                                   videos=['/path_to_the_video_file/Cohab1_pre_20211025_124326434.mp4'], 
                                   working_directory='/path_to_the_working_directory/', 
                                   video_type='.mp4', 
-                                  sleapordlc='conv',
+                                  sleap_or_dlc_or_conv='dlc',
                                   copy_videos=False)
    ```
    
@@ -28,7 +28,7 @@ Make sure you have activated the conda environment that you created following th
    ```
 ### Need to do this if you are working with the Tracked Points 
 1. Copy all the skeleton files under the skeleton folder to your new project directory. 
-Put them under a folder titled  **Skeleton**.
+Put them under a folder titled  **Skeletons**.
 Also, you will need to modify the skeleton based on how you want the points plotted.
 
 ### Note
