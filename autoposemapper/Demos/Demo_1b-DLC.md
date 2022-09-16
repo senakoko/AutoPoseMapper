@@ -26,7 +26,7 @@ It assumes you already have used DLC to train a network and labeled files
 Copy DLC files to DLC folder under the project
 
 5. ```
-   dlc.copy_dlc_files_DD('/Users/senaagezo/Downloads/')
+   dlc.copy_dlc_files_DD('/path_to_the_DLC_data/')
    ```
 Copy DLC h5 files from the DLC folder to the Autoencoder Folder
 
@@ -34,3 +34,9 @@ Copy DLC h5 files from the DLC folder to the Autoencoder Folder
    dlc.copy_dlc_files_AE()
    ```
 
+Copy labeled data used to train the DLC network if you have it - Skip this step if you don't
+You can use the labeled data to train the autoencoder network
+
+6. ```
+   dlc.copy_labeled_DLC_h5('/path_to_the_DLC_data/labeled-data/')
+   ```
