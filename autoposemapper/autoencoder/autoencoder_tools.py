@@ -39,6 +39,10 @@ class AutoEncoderHelper:
         for file in h5_files:
             file_p = Path(file).resolve()
             file_s = file_p.stem
+            animal_1 = file_p.parents[0] / f'{file_p.stem}_ego_animal_1_data.mat'
+            if animal_1.exists():
+                print('already processed ', file_s)
+                continue
             sub_file_folder = file_p.parents[0] / f'{file_s[:file_s.find(f"_{self.parameters.conv_tracker_name}")]}'
             if not sub_file_folder.exists():
                 sub_file_folder.mkdir()

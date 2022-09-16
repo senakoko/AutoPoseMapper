@@ -17,12 +17,15 @@ class AutoTrain:
         if self.parameters is None:
             self.parameters = set_run_parameter()
 
-    def auto_train_initial(self, scorer_type='CNN', encoder_type='SAE', coding_size=16, epochs=5,
+    def auto_train_initial(self, use_labeled_data=True, scorer_type='CNN', encoder_type='SAE', coding_size=16, epochs=5,
                            batch_size=256, earlystop=10, verbose=1, gpu='0',
                            scaling_factor=10):
 
         mat_path = Path(self.project_path) / self.parameters.autoencoder_data_name
-        mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{scorer_type}_ego*.mat', recursive=True))
+        if use_labeled_data:
+            mat_files = sorted(glob.glob(f'{str(mat_path)}/**/Collected*/*{scorer_type}_ego*.mat', recursive=True))
+        else:
+            mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{scorer_type}_ego*.mat', recursive=True))
 
         data = loadmat(mat_files[0])
         data = data[self.parameters.animal_key]
@@ -68,12 +71,15 @@ class AutoTrain:
 
         return train_model, auto
 
-    def auto_retrain(self, scorer_type='CNN', encoder_type='SAE', coding_size=16, epochs=5,
+    def auto_retrain(self, use_labeled_data=True, scorer_type='CNN', encoder_type='SAE', coding_size=16, epochs=5,
                      batch_size=256, earlystop=10, verbose=1, gpu='0',
                      scaling_factor=10):
 
         mat_path = Path(self.project_path) / self.parameters.autoencoder_data_name
-        mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{scorer_type}_ego*.mat', recursive=True))
+        if use_labeled_data:
+            mat_files = sorted(glob.glob(f'{str(mat_path)}/**/Collected*/*{scorer_type}_ego*.mat', recursive=True))
+        else:
+            mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{scorer_type}_ego*.mat', recursive=True))
 
         data = loadmat(mat_files[0])
         data = data[self.parameters.animal_key]
