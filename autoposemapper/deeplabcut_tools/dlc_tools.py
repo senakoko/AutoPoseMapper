@@ -21,20 +21,21 @@ class DlcHelper:
         copy DLC files to the deeplabcut data path
         """
 
-        files = sorted(glob.glob(f'{str(dlc_path)}*DLC*', recursive=True))
+        files = sorted(glob.glob(f'{str(dlc_path)}/**/*DLC*', recursive=True))
         destination_path = Path(self.project_path) / self.parameters.dlc_data_name
 
         for file in files:
             destination_file = f'{destination_path}/{Path(file).name}'
             shutil.copy(file, destination_file)
 
-    def copy_dlc_files_AE(self):
+    def copy_dlc_files_AE(self, dlc_data_path=None):
         """
         copy DLC h5 files to the autoencoder data path
         """
 
-        h5_path = Path(self.project_path) / self.parameters.dlc_data_name
-        h5_files = sorted(glob.glob(f'{str(h5_path)}/*.h5'))
+        if dlc_data_path is None:
+            dlc_data_path = Path(self.project_path) / self.parameters.dlc_data_name
+        h5_files = sorted(glob.glob(f'{str(dlc_data_path)}/**/*DLC*.h5', recursive=True))
 
         destination_path = Path(self.project_path) / self.parameters.autoencoder_data_name
 
