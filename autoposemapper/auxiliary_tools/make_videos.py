@@ -8,12 +8,12 @@ from autoposemapper.setRunParameters import set_run_parameter
 class MakeVideos:
     def __init__(self, project_path, parameters=None):
         self.project_path = project_path
-        self.parameters = parameters
+        self.parameters = set_run_parameter()
 
     def make_tracked_videos(self, video_loc=None, skeleton_path=None,
                             destination_path=None, subset=False,
                             start_time=(1, 0), end_time=(10, 0),
-                            post_name='CNN_SAE', dot_size=4, tracker='_CSI',
+                            post_name='CNN_SAE', dot_size=4, tracker='CNN_SAE',
                             no_tracker=False):
 
         h5_path = Path(self.project_path) / self.parameters.autoencoder_data_name
