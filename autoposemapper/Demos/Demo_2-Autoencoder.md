@@ -100,7 +100,7 @@ Check the h5 files
 
 16. ```
     file_path = '/Path_to_an_H5_file/Cohab1_pre_20211025_124326434_SAE_animal_1_data.h5'
-    auxiliary_tools.utils.check_pandas_h5(file_path)
+    AX_utils.check_pandas_h5(file_path)
     ```
     
 Combine H5 files

@@ -150,7 +150,7 @@ class AutoEncoderHelper:
     def combine_animal_h5_files(self, encoder_type='SAE'):
 
         h5_path = Path(self.project_path) / self.parameters.autoencoder_data_name
-        h5_files = sorted(glob.glob(f'{str(h5_path)}/**/*{encoder_type}*animal*1*.h5'))
+        h5_files = sorted(glob.glob(f'{str(h5_path)}/**/*{encoder_type}*animal*1*.h5', recursive=True))
 
         for file in h5_files:
             combine_h5_files(file)
