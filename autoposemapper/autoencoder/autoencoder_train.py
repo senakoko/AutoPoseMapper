@@ -143,7 +143,15 @@ class AutoTrain:
 
         return train_model, auto
 
-    def predict_w_trained_network(self, scorer_type='CNN', encoder_type='SAE'):
+    def predict_w_trained_network(self, scorer_type='CNN', encoder_type='SAE', gpu='0'):
+
+        if gpu is None:
+            os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+            gpu = '0'
+        elif isinstance(gpu, int):
+            os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
+        else:
+            os.environ["CUDA_VISIBLE_DEVICES"] = gpu
 
         mat_path = Path(self.project_path) / self.parameters.autoencoder_data_name
         mat_files = sorted(glob.glob(f'{str(mat_path)}/**/*{scorer_type}_ego*.mat', recursive=True))
