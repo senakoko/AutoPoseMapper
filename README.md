@@ -15,8 +15,6 @@ with those packages.
 In this current version, the AutoPoseMapper was only tested with two animals.
 However, it should work with more than two based on its implementation.
 
-(Test)
-
 It also inherits the python version of the [Motion
 Mapper](https://github.com/bermanlabemory/motionmapperpy) to create behavioral spaces
 
