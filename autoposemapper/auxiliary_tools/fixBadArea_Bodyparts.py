@@ -4,12 +4,15 @@ import numpy as np
 from pathlib import Path
 from autoposemapper.auxiliary_tools import utils
 from tqdm import tqdm
+import re
 
 
 def fix_bad_area_and_bodyparts(file=None, destination_path=None,
-                               tracker='ANT_filtered', mad_multiplier=4, skeleton_path=None):
+                               tracker='ANT_filtered', mad_multiplier=3,
+                               body_parts_list=None, save_csv=False
+                               ):
     """
-    Fixes the bad tracking where the nose and tail of the vole are abnormal
+    Fixes the bad tracking where the body parts (e.g. nose and tail) of the animal are abnormal
 
     Expects to read h5 files. Doesn't work for csv files
 
@@ -19,7 +22,8 @@ def fix_bad_area_and_bodyparts(file=None, destination_path=None,
     destination_path: the path to save tracked points.
     tracker: the name to append to the file
     mad_multiplier: the coefficient value to use to multiple median absolute deviation
-    skeleton_path: the path to skeleton to use to fix bad body parts tracking
+    body_parts_list: List of body parts to fix. Format - [['Nose', 'betweenEars'], ['tailStart', 'midHip']]
+    save_csv: save a csv file in addition to h5 file
     """
 
     # Reads the path to the h5 files
@@ -36,8 +40,8 @@ def fix_bad_area_and_bodyparts(file=None, destination_path=None,
     else:
         destination_file = f"{str(destination_path)}/{new_name}"
 
-    # if os.path.exists(destination_file):
-    #     return
+    if os.path.exists(destination_file):
+        return
 
     print(destination_file)
 
@@ -50,7 +54,9 @@ def fix_bad_area_and_bodyparts(file=None, destination_path=None,
     bodyparts = h5.columns.get_level_values('bodyparts').unique().to_list()
     animal_main_df = pd.DataFrame()
 
-    body_parts_list = [['Nose', 'betweenEars'], ['tailStart', 'midHip']]
+    if body_parts_list is None:
+        body_parts_list = [['Nose', 'betweenEars'], ['tailStart', 'midHip']]
+        print('using this default bodyparts:', body_parts_list)
 
     for ind in individuals:
         h5_body = h5[scorer][ind].values
@@ -98,4 +104,7 @@ def fix_bad_area_and_bodyparts(file=None, destination_path=None,
     ind_values = h5.index
     dataframe = pd.DataFrame(animal_main_df.values, index=ind_values, columns=col)
     dataframe.to_hdf(destination_file, animal_key)
+    if save_csv:
+        destination_file_csv = destination_file[:-2] + 'csv'
+        dataframe.to_csv(destination_file_csv)
     return dataframe
