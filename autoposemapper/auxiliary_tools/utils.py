@@ -51,3 +51,30 @@ def cal_animal_area(h5_data=None, scorer="Stacked_Autoencoder", individual='ind1
     area_df = pd.DataFrame({'area': area})
 
     return area_df
+
+
+def cal_bodyparts_dist(h5_data=None, body_part1='Nose', body_part2='betweenEars',
+                       scorer="Stacked_Autoencoder", individual='ind1'):
+    """
+    Calculate the distance between body parts
+
+    Parameters
+    ----------
+    h5_data: h5 data or path to h5 data
+    body_part1: the first body point to use
+    body_part2: the second boyd point to use
+    scorer: the annotator/scorer of h5 file
+    individual: which individual to calculate its area
+    """
+    if not isinstance(h5_data, pd.DataFrame):
+        h5 = pd.read_hdf(h5_data)
+    else:
+        h5 = h5_data
+
+    bpt1 = h5[scorer][individual].loc[:, body_part1]
+    bpt2 = h5[scorer][individual].loc[:, body_part2]
+    bpts_diff = bpt1.sub(bpt2)
+    bpts_dist = np.linalg.norm(bpts_diff, axis=1)
+    bpts_df = pd.DataFrame({'bpts_dist': bpts_dist})
+
+    return bpts_df
