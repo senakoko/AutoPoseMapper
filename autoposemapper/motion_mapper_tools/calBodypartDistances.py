@@ -26,8 +26,7 @@ def cal_animal_area(h5=None, nsample=50, nframes=30, scorer=None):
             continue
         nose = h5[scorer].loc[i:i + nframes, 'Nose']
         left_mid = h5[scorer].loc[i:i + nframes, 'leftMidWaist']
-        bodypart = h5[scorer].loc[i:i + nframes, ['betweenEars_midBody', 'midBody_midHip']]
-        center = bodypart.betweenEars_midBody.add(bodypart.midBody_midHip).divide(2)
+        center = h5[scorer].loc[i:i + nframes, 'midBody']
         a_len = nose.sub(center)
         b_len = center.sub(left_mid)
         a_dist = np.linalg.norm(a_len, axis=1)
@@ -58,8 +57,7 @@ def cal_animal_area_multi(h5, nsample=50, nframes=30):
             continue
         nose = h5.loc[i:i + nframes, 'Nose']
         left_mid = h5.loc[i:i + nframes, 'leftMidWaist']
-        bodypart = h5.loc[i:i + nframes, ['betweenEars_midBody', 'midBody_midHip']]
-        center = bodypart.betweenEars_midBody.add(bodypart.midBody_midHip).divide(2)
+        center = h5[scorer].loc[i:i + nframes, 'midBody']
         a_len = nose.sub(center)
         b_len = center.sub(left_mid)
         a_dist = np.linalg.norm(a_len, axis=1)
@@ -72,7 +70,7 @@ def cal_animal_area_multi(h5, nsample=50, nframes=30):
     return overall_area
 
 
-def cal_bodypart_distances(file=None, destination_path=None, encoder_type='CSI'):
+def cal_bodypart_distances(file=None, destination_path=None, encoder_type='CNN'):
     """
     Calculate the euclidean distances between body parts and returns a dataframe of distances 
     for only one animal
@@ -159,7 +157,7 @@ def cal_bodypart_distances(file=None, destination_path=None, encoder_type='CSI')
     final_distances.to_hdf(destination_file, parameters.animal_key)
 
 
-def cal_bodypart_distances_multi(file=None, destination_path=None, encoder_type='CSI'):
+def cal_bodypart_distances_multi(file=None, destination_path=None, encoder_type='CNN'):
     """
     Calculate the euclidean distances between body parts and returns a dataframe of distances 
     for only one animal
@@ -179,10 +177,10 @@ def cal_bodypart_distances_multi(file=None, destination_path=None, encoder_type=
 
     name = 'animal_1'
     if destination_path is None:
-        destination_path = file.rsplit('/', 1)[0]
-        destination_file = f"{destination_path}/{destination_name}_{name}_euc.h5"
+        destination_path = str(Path(file).parent)
+        destination_file = f"{destination_path}/{destination_name}{name}_euc.h5"
     else:
-        destination_file = f"{destination_path}/{destination_name}_{name}_euc.h5"
+        destination_file = f"{destination_path}/{destination_name}{name}_euc.h5"
 
     if os.path.exists(destination_file):
         return
@@ -205,7 +203,6 @@ def cal_bodypart_distances_multi(file=None, destination_path=None, encoder_type=
     for it, ind in enumerate(tqdm(individuals)):
 
         ind_h5 = h5[scorer][ind]
-        # return ind_h5
 
         anim_area = cal_animal_area_multi(ind_h5, nsample=120, nframes=30)
 
@@ -245,13 +242,13 @@ def cal_bodypart_distances_multi(file=None, destination_path=None, encoder_type=
         final_distances.fillna(method='bfill', inplace=True)
         final_distances = final_distances.divide(np.sqrt(anim_area))  # Normalize  distance but the area of the voles
 
-        name = f'vole_{it + 1}'
+        name = f'animal_{it + 1}'
         if destination_path is None:
             destination_path = file.rsplit('/', 1)[0]
-            destination_file = f"{destination_path}/{destination_name}_{name}_euc.h5"
+            destination_file = f"{destination_path}/{destination_name}{name}_euc.h5"
         else:
-            destination_file = f"{destination_path}/{destination_name}_{name}_euc.h5"
+            destination_file = f"{destination_path}/{destination_name}{name}_euc.h5"
 
-        print(f'{destination_name}_{name}:', int(np.sqrt(anim_area)))
+        print(f'{destination_name}{name}:', int(np.sqrt(anim_area)))
 
         final_distances.to_hdf(destination_file, parameters.animal_key)
