@@ -11,7 +11,7 @@ class AutoTrainDimRed:
         self.project_path = project_path
         self.body_info_path = body_info_path
 
-    def auto_train_dimred(self, encoder_type='SAE', coding_size=8, epochs=5,
+    def auto_train_dimred(self, encoder_type='SAE', coding_size=8, epochs=100,
                           batch_size=256, earlystop=10, verbose=1, gpu='0',
                           scaling_factor=10):
 
@@ -19,6 +19,7 @@ class AutoTrainDimRed:
         data_files = sorted(glob.glob(f'{str(data_path)}/*.h5', recursive=True))
 
         data = pd.read_hdf(data_files[0])
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
 
         checkpoint_path = Path(self.project_path) / 'Training'
         if encoder_type == 'SAE':
@@ -64,7 +65,7 @@ class AutoTrainDimRed:
 
         return train_model, auto
 
-    def auto_retrain_dimred(self, encoder_type='SAE', coding_size=8, epochs=5,
+    def auto_retrain_dimred(self, encoder_type='SAE', coding_size=8, epochs=100,
                             batch_size=256, earlystop=10, verbose=1, gpu='0',
                             scaling_factor=10):
 
@@ -72,6 +73,7 @@ class AutoTrainDimRed:
         data_files = sorted(glob.glob(f'{str(data_path)}/*.h5', recursive=True))
 
         data = pd.read_hdf(data_files[0])
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
 
         checkpoint_path = Path(self.project_path) / 'Training'
 
@@ -115,7 +117,7 @@ class AutoTrainDimRed:
 
         return train_model, auto
 
-    def reduce_dimensions(self, encoder_type='SAE', coding_size=8, epochs=5,
+    def reduce_dimensions(self, encoder_type='SAE', coding_size=8, epochs=100,
                           batch_size=256, earlystop=10, verbose=1, gpu='0',
                           scaling_factor=10):
 
@@ -130,6 +132,7 @@ class AutoTrainDimRed:
             print(f'{destination_path.stem} folder made')
 
         data = pd.read_hdf(data_files[0])
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
 
         checkpoint_path = Path(self.project_path) / 'Training'
 
