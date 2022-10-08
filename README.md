@@ -41,8 +41,8 @@ Demo_0 - Create Project
 Demo_0a - Add New Videos to Project  
 Demo_1a - Use SLEAP helper tools  
 Demo_1b - Use DLC helper tools  
-Demo_1c - Use Convolutional tools  
-Demo_1d - Use ID Tracker.AI Tools  
+Demo_1c - Use Convolutional Autoencoder tools  
+Demo_1d - Use ID Tracker.AI tools  
 Demo_2 - Use Autoencoder tools  
 Demo_3a - Fix Bad Areas  
 Demo_3a - Add Body Center  
