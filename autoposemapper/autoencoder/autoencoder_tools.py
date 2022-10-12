@@ -31,7 +31,7 @@ class AutoEncoderHelper:
                         b2='tailStart', drop_point=True, which_points=['tailEnd']):
 
         h5_path = Path(self.project_path) / self.parameters.autoencoder_data_name
-        h5_files = sorted(glob.glob(f'{str(h5_path)}/*.h5'))
+        h5_files = sorted(glob.glob(f'{str(h5_path)}/**/*{self.parameters.conv_tracker_name}.h5', recursive=True))
 
         config_path = Path(self.project_path) / self.parameters.config_name
         config_path = str(config_path.resolve())
