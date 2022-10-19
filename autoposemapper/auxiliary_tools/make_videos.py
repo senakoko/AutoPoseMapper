@@ -34,8 +34,6 @@ class MakeVideos:
                                 start_time=start_time, end_time=end_time,
                                 post_name=post_name, dot_size=dot_size, tracker=tracker,
                                 no_tracker=no_tracker)
-            if i == 2:
-                break
 
     def make_tracked_videos_w_idt(self, video_loc=None, skeleton_path=None,
                                   destination_path=None, subset=False,
