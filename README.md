@@ -19,16 +19,17 @@ It also inherits the python version of the [Motion
 Mapper](https://github.com/bermanlabemory/motionmapperpy) to create behavioral spaces
 
 ## Installation:
-1. Create a new conda environment <code>conda create -n apm python=3.7 -y </code>
-2. Activate desired conda environment <code> conda activate apm </code>
-3. Download the repository and unzip contents. Open terminal and 
-navigate to unzipped folder containing requirements.txt.
-4. Run   
+1. Open a terminal
+2. Download the repository <code> git clone https://github.com/senakoko/AutoPoseMapper.git </code>
+3. Create a new conda environment <code>conda create -n apm python=3.7 -y </code>
+4. Activate desired conda environment <code> conda activate apm </code>
+5. Navigate to unzipped folder containing requirements.txt.  
+6. Run   
 <code>
 pip install -r requirements.txt  
 </code>   
 
-5. Install tensorflow gpu if you have the hardware  
+7. Install tensorflow gpu if you have the hardware  
 <code>
 pip install tensorflow-gpu==2.4.0
 </code>  
