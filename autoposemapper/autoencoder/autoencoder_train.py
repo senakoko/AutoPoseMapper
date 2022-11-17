@@ -1,5 +1,6 @@
 import os
 import glob
+import re
 from pathlib import Path
 from scipy.io import savemat, loadmat
 from tensorflow import keras as k
@@ -143,11 +144,10 @@ class AutoTrain:
 
         return train_model, auto
 
-    def predict_w_trained_network(self, scorer_type='CNN', encoder_type='SAE', gpu='0'):
+    def predict_w_trained_network(self, scorer_type='CNN', encoder_type='SAE', gpu='0', coding_size=16):
 
         if gpu is None:
             os.environ["CUDA_VISIBLE_DEVICES"] = '0'
-            gpu = '0'
         elif isinstance(gpu, int):
             os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
         else:
@@ -159,7 +159,11 @@ class AutoTrain:
         model_path = Path(self.project_path) / 'Training' / 'models'
         model_path = sorted(glob.glob(f"{str(model_path.resolve())}/model*{encoder_type}*", recursive=True))
 
-        model_file = model_path[-1]
+        model_file = ''
+        for mod in model_path:
+            model_name = f'{encoder_type}_{coding_size}'
+            if re.search(model_name, mod):
+                model_file = mod
         print(model_file)
 
         auto = k.models.load_model(model_file)
