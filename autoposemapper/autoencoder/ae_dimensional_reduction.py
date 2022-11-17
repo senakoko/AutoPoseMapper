@@ -150,8 +150,11 @@ class AutoTrainDimRed:
 
         weights = sorted(glob.glob(f"{str(checkpoint_path.resolve())}/dimred_weights/**/{encoder_type}*.ckpt.index",
                                    recursive=True))
-        weights = weights[-1]
-        weights = weights.rsplit('.', 1)[0]
+        for wt in weights:
+            weight_name = f'{encoder_type}_{coding_size}'
+            if re.search(weight_name, wt):
+                weight_to_use = wt
+        weights = weight_to_use.rsplit('.', 1)[0]
         auto.model.load_weights(weights)
 
         for file in data_files:
