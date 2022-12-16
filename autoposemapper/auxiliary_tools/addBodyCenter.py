@@ -1,7 +1,18 @@
 import pandas as pd
+from pathlib import Path
+import re
 
 
-def add_body_center(file):
+def add_body_center(file, tracker='ANT_filtered'):
+    file_p = Path(file)
+    parent = file_p.parents[0]
+    stem = file_p.stem
+    if re.search('_filtered', stem):
+        stem = stem[:stem.find('_filtered')]
+
+    new_name = stem + f'_{tracker}.h5'
+
+    destination_file = f"{parent}/{new_name}"
 
     # Including the 'midBody' in the old list of bodyparts
     new_bodyparts = ['Nose', 'leftEar', 'betweenEars', 'rightEar', 'rightMidWaist', 'midBody',
@@ -15,8 +26,8 @@ def add_body_center(file):
     individuals = h5.columns.get_level_values('individuals').unique()
     bodyparts = h5.columns.get_level_values('bodyparts').unique()
 
-
     if 'midBody' not in bodyparts:
+
         # Create new h5 file with the body parts to be kept
         main_data = pd.DataFrame()
         for ind in individuals:
@@ -35,10 +46,12 @@ def add_body_center(file):
 
         # Save processed h5 file
         col = pd.MultiIndex.from_product([[scorer], individuals, new_bodyparts, ['x', 'y']],
-                                        names=['scorer', 'individuals', 'bodyparts', 'coords'])
+                                         names=['scorer', 'individuals', 'bodyparts', 'coords'])
         main_df = pd.DataFrame(main_data.values, index=main_data.index, columns=col)
-        main_df.to_hdf(file, animal_key)
+        main_df.to_hdf(destination_file, animal_key)
+        print('Added midBody')
 
         return main_df
+
     else:
         print('midBody already added to the file')
